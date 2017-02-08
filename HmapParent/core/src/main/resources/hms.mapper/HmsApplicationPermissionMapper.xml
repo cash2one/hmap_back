@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="hmap.core.hms.permission.mapper.HmsApplicationPermissionMapper">
+    <resultMap id="BaseResultMap" type="hmap.core.hms.permission.domain.HmsApplicationPermission" extends="com.hand.hap.mapper.StdMapper.STD">
+        <id column="ID" property="id" jdbcType="VARCHAR"/>
+        <result column="DATA_ID" property="dataId" jdbcType="VARCHAR"/>
+        <result column="VISIBILITY_TYPE" property="visibilityType" jdbcType="VARCHAR"/>
+        <result column="DATA_TYPE" property="dataType" jdbcType="VARCHAR"/>
+        <result column="DATA_VALUE" property="dataValue" jdbcType="VARCHAR"/>
+        <result column="DATA_KEY" property="dataKey" jdbcType="VARCHAR"/>
+        <result column="VALUE_ID" property="valueId" jdbcType="VARCHAR"/>
+        <result column="VALUE_ICON" property="valueIcon" jdbcType="VARCHAR"/>
+    </resultMap>
+    <select id="selectByDataKey" resultMap="BaseResultMap">
+        select * from hms_application_permission
+        where
+          VISIBILITY_TYPE = #{visibilityType,jdbcType=VARCHAR}
+          AND
+          DATA_TYPE = #{dataType,jdbcType=VARCHAR}
+          AND
+          DATA_KEY = #{dataKey,jdbcType=VARCHAR}
+    </select>
+    <select id="selectByValueId" resultMap="BaseResultMap">
+        select * from hms_application_permission
+        where
+        VISIBILITY_TYPE = #{visibilityType,jdbcType=VARCHAR}
+        AND
+        DATA_TYPE = #{dataType,jdbcType=VARCHAR}
+        AND
+        VALUE_ID = #{valueId,jdbcType=VARCHAR}
+    </select>
+    <select id="preSelect" resultMap="BaseResultMap">
+        select * from hms_application_permission
+        where
+        VISIBILITY_TYPE = #{visibilityType,jdbcType=VARCHAR}
+        AND
+        DATA_TYPE = #{dataType,jdbcType=VARCHAR}
+    </select>
+    <select id="selectByDataId" resultMap="BaseResultMap">
+        select * from hms_application_permission
+        where
+        DATA_ID = #{dataId,jdbcType=VARCHAR}
+    </select>
+    <select id="selectById" resultMap="BaseResultMap">
+        select * from hms_application_permission
+        where
+        ID = #{id,jdbcType=VARCHAR}
+    </select>
+    <select id="deleteByDataId" resultMap="BaseResultMap">
+        DELETE from hms_application_permission
+        where
+        DATA_ID = #{dataId,jdbcType=VARCHAR}
+    </select>
+</mapper>

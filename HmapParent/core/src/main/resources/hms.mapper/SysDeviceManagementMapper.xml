@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="hmap.core.hms.device.mapper.SysDeviceManagementMapper">
+    <resultMap id="sysDeviceManagementMap" type="hmap.core.hms.domain.SysDeviceManagement" extends="com.hand.hap.mapper.StdMapper.STD">
+        <id column="DEVICE_ID" property="deviceId" jdbcType="VARCHAR"/>
+        <result column="DEVICE_BRAND" property="deviceBrand" jdbcType="VARCHAR"/>
+        <result column="DEVICE_TYPE" property="deviceType" jdbcType="VARCHAR"/>
+        <result column="OPENING_SYSTEM" property="openingSystem" jdbcType="VARCHAR"/>
+        <result column="DEVICE_USER" property="deviceUser" jdbcType="VARCHAR"/>
+        <result column="CREATION_DATE" property="creationDate" jdbcType="DATE"/>
+        <result column="DEVICE_FLAG" property="deviceFlag" jdbcType="VARCHAR" />
+        <result column="IME" property="ime" jdbcType="VARCHAR" />
+    </resultMap>
+
+    <select id="selectByUser" resultMap="sysDeviceManagementMap">
+        select sdm.DEVICE_ID,sdm.DEVICE_BRAND,sdm.DEVICE_TYPE,sdm.OPENING_SYSTEM,
+        sdm.CREATION_DATE,sdm.DEVICE_FLAG,sdm.IME,su.USER_NAME DEVICE_USER
+        from sys_device_management sdm,sys_user su
+        where su.USER_ID=sdm.DEVICE_USER
+        <if test="deviceUser!=null">AND su.USER_NAME="${deviceUser}"</if>
+    </select>
+    <select id="selectByDeviceId" resultMap="sysDeviceManagementMap">
+        SELECT * FROM sys_device_management WHERE DEVICE_ID=#{deviceId}
+    </select>
+    <update id="updateFlag" flushCache="true">
+        update sys_device_management
+        SET
+        DEVICE_FLAG="N"
+        WHERE DEVICE_ID="${deviceId}"
+    </update>
+
+    <insert id="insertDevice" flushCache="true">
+        INSERT INTO sys_device_management(
+        DEVICE_ID,DEVICE_BRAND,DEVICE_TYPE,OPENING_SYSTEM,DEVICE_USER,DEVICE_FLAG,CREATION_DATE,IME
+        )
+        VALUES (
+        "${sysDeviceManagement.deviceId}","${sysDeviceManagement.deviceBrand}",
+        "${sysDeviceManagement.deviceType}","${sysDeviceManagement.openingSystem}",
+        "${sysDeviceManagement.deviceUser}","${sysDeviceManagement.deviceFlag}",CURRENT_TIMESTAMP,
+        "${sysDeviceManagement.ime}"
+        )
+    </insert>
+</mapper>

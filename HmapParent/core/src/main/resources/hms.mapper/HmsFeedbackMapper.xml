@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="hmap.core.hms.feedback.mapper.HmsFeedbackMapper" >
+    <resultMap id="FeedbackMap" type="hmap.core.hms.feedback.dto.HmsFeedbackDTO" >
+        <id column="FEEDBACK_ID" property="feedbackId" jdbcType="VARCHAR"/>
+        <result column="USER_ID" property="userId" jdbcType="BIGINT"/>
+        <result column="FEEDBACK_DATA" property="feedbackData" jdbcType="VARCHAR"/>
+        <result column="FEEDBACK_DATE" property="feedbackDate" jdbcType="VARCHAR"/>
+        <result column="FEEDBACK_TYPE" property="feedbackType" jdbcType="VARCHAR"/>
+        <result column="REPLY_FLAG" property="replyFlag" jdbcType="BIGINT"/>
+        <result column="USER_NAME" property="userName" jdbcType="VARCHAR"/>
+        <result column="USER_TYPE" property="userType" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <select id="selectFeedback" resultMap="FeedbackMap" parameterType="hmap.core.hms.feedback.dto.HmsFeedbackDTO">
+        select f.*,s.USER_NAME , s.USER_TYPE  from hms_feedback f,sys_user s where s.USER_ID=f.USER_ID
+            <if test="feedbackType != null">
+                AND FEEDBACK_TYPE = #{feedbackType,jdbcType=VARCHAR}
+            </if>
+            <if test="userId != null ">
+                AND s.USER_ID =#{userId,jdbcType=BIGINT}
+            </if>
+            <if test="startDate !=null &amp; endDate !=null">
+                AND FEEDBACK_DATE BETWEEN  #{startDate,jdbcType=VARCHAR} AND #{endDate,jdbcType=VARCHAR}
+            </if>
+            <if test="userType !=null">
+              AND s.USER_TYPE= #{userType,jdbcType=VARCHAR}
+            </if>
+            <if test="feedbackData != null">
+              AND (FEEDBACK_DATA LIKE concat('%',concat(#{feedbackData,jdbcType=VARCHAR},'%')) OR  F.FEEDBACK_ID IN (SELECT FEEDBACK_ID FROM hms_feedback_reply where REPLY_DATA LIKE concat('%',concat(#{feedbackData,jdbcType=VARCHAR},'%'))))
+            </if>
+       ORDER BY FEEDBACK_DATE DESC
+    </select>
+    <select id="selectNotReply" resultMap="FeedbackMap" parameterType="hmap.core.hms.feedback.dto.HmsFeedbackDTO">
+         select f.*,s.USER_NAME , s.USER_TYPE  from hms_feedback f,sys_user s where s.USER_ID=f.USER_ID AND( f.REPLY_FLAG=0 OR f.FEEDBACK_ID IN (SELECT FEEDBACK_ID FROM hms_feedback_reply where REPLY_FLAG=0 AND USER_ID !=#{userId,jdbcType=BIGINT})) ORDER BY FEEDBACK_DATE DESC
+    </select>
+    
+    <update id="updateFeedback">
+      UPDATE hms_feedback f, hms_feedback_reply r SET f.REPLY_FLAG = 2 WHERE  f.FEEDBACK_ID= r.FEEDBACK_ID AND r.USER_ID != f.USER_ID
+    </update>
+</mapper>

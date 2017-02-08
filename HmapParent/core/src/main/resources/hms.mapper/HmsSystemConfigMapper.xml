@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="hmap.core.hms.system.mapper.HmsSystemConfigMapper">
+    <resultMap id="systemConfigMap" type="hmap.core.hms.system.domain.HmsSystemConfig" extends="com.hand.hap.mapper.StdMapper.STD">
+        <id column="ID" property="id" jdbcType="VARCHAR"/>
+        <result column="CONFIG_KEY" property="configKey" jdbcType="VARCHAR"/>
+        <result column="CONFIG_VALUE" property="configValue" jdbcType="VARCHAR"/>
+        <result column="CONFIG_DESC" property="configDesc" jdbcType="VARCHAR"/>
+        <result column="CONFIG_LEVEL" property="configLevel" jdbcType="VARCHAR"/>
+        <result column="ENABLE" property="enable" jdbcType="VARCHAR"/>
+    </resultMap>
+    <select id="selectByConfigKey" resultMap="systemConfigMap">
+        select * from Hms_System_Config where CONFIG_KEY = #{CONFIG_KEY}
+    </select>
+</mapper>

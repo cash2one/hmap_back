@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd">
+
+
+    <!--<bean class="hmap.core.beans.CorsConfigurerAdapter"></bean>-->
+
+    <bean id="aliYunUploaderService"
+          class="hmap.core.hms.uploader.service.impl.AliYunUploaderServiceImpl">
+        <property name="name" value="aliyun"/>
+    </bean>
+    <bean id="sftpUploaderService"
+          class="hmap.core.hms.uploader.service.impl.SftpUploaderServiceImpl">
+        <property name="name" value="sftp"/>
+        <property name="host" value="ftp.host"></property>
+        <property name="port" value="ftp.port"></property>
+        <property name="username" value="ftp.username"></property>
+        <property name="password" value="ftp.password"></property>
+        <property name="uploadDir" value="ftp.uploadDir"></property>
+        <property name="outUrlPrefix" value="ftp.outUrlPrefix"></property>
+        <property name="thumbnailScale" value="ftp.thumbnailScale"></property>
+        <property name="thumbnailOutputQuality" value="ftp.thumbnailOutputQuality"></property>
+    </bean>
+
+    <bean class="hmap.core.hms.uploader.service.impl.UploaderMangerImpl">
+        <property name="uploads">
+            <list>
+                <ref bean="sftpUploaderService"/>
+                <ref bean="aliYunUploaderService"/>
+            </list>
+        </property>
+    </bean>
+    <bean class="hmap.core.beans.JDBCSqlSessionFactory">
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+
+    <bean id="plsqlBean" class="hmap.core.hms.api.service.impl.PLSQLApiServiceImpl"></bean>
+    <bean id="restBean" class="hmap.core.hms.api.service.impl.RestApiServiceImpl"></bean>
+    <bean id="soapBean" class="hmap.core.hms.api.service.impl.SoapApiServiceImpl"></bean>
+    <bean id="mockBean" class="hmap.core.hms.api.service.impl.MockApiServiceImpl"></bean>
+    <bean id="staffIndexConsumer" class="hmap.core.message.impl.StaffIndexConsumer"></bean>
+    <bean id="contactTagIndexConsumer" class="hmap.core.message.impl.ContactTagIndexConsumer"></bean>
+    <bean id="deptIndexConsumer" class="hmap.core.message.impl.DeptIndexConsumer"></bean>
+    <bean id="pushIndexConsumer" class="hmap.core.message.impl.PushConsumer"></bean>
+    <bean id="countRequestConsumer" class="hmap.core.message.impl.CountRequestConsumer"></bean>
+    <bean id="authenticationFailureListener" class="hmap.core.hms.system.service.impl.AuthenticationFailureListener"></bean>
+
+
+    <bean id="messageCenter" class="hmap.core.hms.message.service.impl.HmsMessageCenterImpl">
+        <property name="pushList">
+            <list>
+                <ref bean="JPushImpl"/>
+                <ref bean="hmsSms"/>
+            </list>
+        </property>
+    </bean>
+    <bean id="JPushImpl" class="hmap.core.hms.message.service.impl.HmsJPushImpl">
+    </bean>
+    <bean id="hmsSms" class="hmap.core.hms.message.service.impl.HmsSmsImpl">
+    </bean>
+    <bean id="localFeedBack" class="hmap.core.hms.message.service.impl.HmsLocalFeedBackImpl">
+        <property name="name" value="local"/>
+    </bean>
+    <bean id="feedBackManager" class="hmap.core.hms.message.service.impl.HmsFeedBackManagerImpl">
+        <property name="list">
+            <list>
+                <ref bean="localFeedBack"/>
+            </list>
+        </property>
+    </bean>
+
+
+    <!-- http连接池 -->
+    <bean id="pollingConnectionManager" class="org.apache.http.impl.conn.PoolingHttpClientConnectionManager">
+        <!-- 最大连接数 -->
+        <property name="maxTotal" value="1000"/>
+        <!-- 同一个主机(IP)的最大并发连接数 -->
+        <property name="defaultMaxPerRoute" value="500"/>
+    </bean>
+    <bean id="httpClientBuilder" class="org.apache.http.impl.client.HttpClientBuilder" factory-method="create">
+        <property name="connectionManager" ref="pollingConnectionManager"/>
+    </bean>
+    <bean id="httpClient" factory-bean="httpClientBuilder" factory-method="build"/>
+
+    <bean id="clientHttpRequestFactory" class="org.springframework.http.client.HttpComponentsClientHttpRequestFactory">
+        <constructor-arg ref="httpClient"/>
+        <property name="connectTimeout" value="30000"/>
+        <property name="readTimeout" value="30000"/>
+    </bean>
+
+    <bean id="restTemplate" class="org.springframework.web.client.RestTemplate">
+        <constructor-arg ref="clientHttpRequestFactory"/>
+        <property name="messageConverters">
+            <list>
+                <bean class="org.springframework.http.converter.StringHttpMessageConverter">
+                    <constructor-arg name="defaultCharset" value="UTF-8" />
+                    <property name="supportedMediaTypes">
+                        <list>
+                            <value>text/html;charset=UTF-8</value>
+                            <value>application/json;charset=UTF-8</value>
+                            <value>application/x-www-form-urlencoded;charset=UTF-8</value>
+                        </list>
+                    </property>
+                </bean>
+
+
+            </list>
+        </property>
+    </bean>
+
+
+</beans>

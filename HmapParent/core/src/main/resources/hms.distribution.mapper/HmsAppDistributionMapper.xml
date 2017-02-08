@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="hmap.core.hms.distribution.mapper.HmsAppDistributionMapper">
+    <resultMap id="hmsAppDistributionMap"
+               type="hmap.core.hms.distribution.dto.HmsAppDistributionDTO"
+               extends="com.hand.hap.mapper.StdMapper.STD">
+        <result column="APP_ID" property="appId" jdbcType="VARCHAR"/>
+        <result column="APP_NAME" property="appName" jdbcType="VARCHAR"/>
+        <result column="APP_ICON" property="appIcon" jdbcType="VARCHAR"/>
+        <result column="APP_PLATFORM" property="appPlatform" jdbcType="VARCHAR"/>
+        <result column="APP_DESCRIPTION" property="appDescription" jdbcType="VARCHAR"/>
+        <result column="BUNDLE_NAME" property="bundleName" jdbcType="VARCHAR"/>
+        <result column="PACKAGE_NAME" property="packageName" jdbcType="VARCHAR"/>
+        <result column="RANDOM_CODE" property="randomCode" jdbcType="VARCHAR"/>
+        <result column="QR_CODE" property="qrCode" jdbcType="VARCHAR"/>
+        <result column="LATEST_VERSION_ID" property="lastestVersionId" jdbcType="VARCHAR"/>
+        <result column="LATEST_VERSION" property="lastestVersion" jdbcType="VARCHAR"/>
+        <result column="BUILD_NUM" property="buildNum" jdbcType="BIGINT"/>
+        <result column="APP_SIZE" property="appSize" jdbcType="VARCHAR"/>
+        <result column="APP_FILE" property="appFile" jdbcType="VARCHAR"/>
+        <result column="PLIST_URL" property="plistUrl" jdbcType="VARCHAR"/>
+        <result column="DOWNLOAD_URL" property="downloadUrl" jdbcType="VARCHAR"/>
+        <result column="CREATION_DATE" property="creationDate" jdbcType="VARCHAR"/>
+        <result column="CREATED_BY" property="createdBy" jdbcType="VARCHAR"/>
+        <result column="LAST_UPDATED_BY" property="lastUpdatedBy" jdbcType="VARCHAR"/>
+        <result column="LAST_UPDATE_DATE" property="lastUpdateDate" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <select id="selectAllApp" resultMap="hmsAppDistributionMap">
+        SELECT
+        ah.app_id,
+        ah.app_name,
+        ah.app_icon,
+        ah.APP_PLATFORM,
+        ah.APP_DESCRIPTION,
+        ah.BUNDLE_NAME,
+        ah.PACKAGE_NAME,
+        ah.RANDOM_CODE,
+        ah.QR_CODE,
+        av.LAST_UPDATE_DATE,
+        av.VERSION LATEST_VERSION,
+        av.id LATEST_VERSION_ID
+        FROM
+        hms_app_distribution ah,
+        hms_app_version av
+        where
+        av.app_id = ah.app_id
+        and av.IS_CURRENT_VERSION = 'Y'
+        <if test="appName != null ">
+            and ah.APP_NAME like '%${appName}%'
+        </if>
+        <if test="appPlatform != null ">
+            and ah.APP_PLATFORM = #{appPlatform}
+        </if>
+        ORDER BY av.CREATION_DATE DESC
+    </select>
+
+    <select id="selectAppByAppId" resultMap="hmsAppDistributionMap">
+        SELECT
+        ah.app_id,
+        ah.app_name,
+        ah.app_icon,
+        ah.APP_PLATFORM,
+        ah.APP_DESCRIPTION,
+        ah.BUNDLE_NAME,
+        ah.PACKAGE_NAME,
+        ah.RANDOM_CODE,
+        ah.QR_CODE,
+        av.LAST_UPDATE_DATE,
+        av.VERSION LATEST_VERSION,
+        av.id LATEST_VERSION_ID,
+        av.BUILD_NUM
+FROM
+    hms_app_distribution ah,
+    hms_app_version av
+where av.app_id = ah.app_id
+     and av.IS_CURRENT_VERSION = 'Y'
+     and ah.app_id =  #{appId}
+    </select>
+
+
+    <select id="selectAppByRandomNameAndPlatform" resultMap="hmsAppDistributionMap">
+    SELECT
+        ah.app_id,
+        ah.app_name,
+        ah.app_icon,
+        ah.APP_PLATFORM,
+        ah.APP_DESCRIPTION,
+        ah.BUNDLE_NAME,
+        ah.PACKAGE_NAME,
+        ah.RANDOM_CODE,
+        ah.QR_CODE,
+        av.LAST_UPDATE_DATE,
+        av.VERSION LATEST_VERSION,
+        av.id LATEST_VERSION_ID,
+        av.PLIST_URL
+    FROM
+            hms_app_distribution ah,
+            hms_app_version av
+    where
+    av.app_id = ah.app_id
+    and ah.RANDOM_CODE = #{randomCode}
+    and ah.APP_PLATFORM=#{platForm}
+    and av.IS_CURRENT_VERSION = 'Y'
+    </select>
+
+    <select id="selectAppByRandomName" resultMap="hmsAppDistributionMap">
+        SELECT
+        ah.app_id,
+        ah.app_name,
+        ah.app_icon,
+        ah.APP_PLATFORM,
+        ah.APP_DESCRIPTION,
+        ah.BUNDLE_NAME,
+        ah.PACKAGE_NAME,
+        ah.RANDOM_CODE,
+        ah.QR_CODE,
+        av.LAST_UPDATE_DATE,
+        av.VERSION LATEST_VERSION,
+        av.id LATEST_VERSION_ID
+        FROM
+        hms_app_distribution ah,
+        hms_app_version av
+        where
+        av.app_id = ah.app_id
+        and av.IS_CURRENT_VERSION = 'Y'
+        and ah.RANDOM_CODE = #{randomCode}
+    </select>
+
+    <select id="selectAppByBundleNameAndPlatform" resultMap="hmsAppDistributionMap">
+     SELECT
+        ah.app_id,
+        ah.app_name,
+        ah.app_icon,
+        ah.APP_PLATFORM,
+        ah.APP_DESCRIPTION,
+        ah.BUNDLE_NAME,
+        ah.PACKAGE_NAME,
+        ah.RANDOM_CODE,
+        ah.QR_CODE,
+        av.LAST_UPDATE_DATE,
+        av.VERSION LATEST_VERSION,
+        av.id LATEST_VERSION_ID
+FROM
+    hms_app_distribution ah,
+    hms_app_version av
+where
+    av.app_id = ah.app_id
+    and av.IS_CURRENT_VERSION = 'Y'
+    and ah.BUNDLE_NAME = #{bundleName}
+    and ah.APP_PLATFORM=#{platForm}
+    </select>
+</mapper>

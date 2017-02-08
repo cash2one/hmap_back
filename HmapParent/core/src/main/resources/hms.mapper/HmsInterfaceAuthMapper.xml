@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="hmap.core.hms.api.mapper.HmsInterfaceAuthMapper">
+    <resultMap id="interfaceAuthMap" type="hmap.core.hms.api.dto.HmsInterfaceAuthDTO"
+               extends="com.hand.hap.mapper.StdMapper.STD">
+        <!--HmsInterfaceAuth-->
+        <result column="INTERFACE_AUTH_ID" property="interfaceAuthId" jdbcType="VARCHAR"/>
+        <result column="INTERFACE_HEADER_ID" property="interfaceHeaderId" jdbcType="VARCHAR"/>
+        <result column="INTERFACE_LINE_ID" property="interfaceLineId" jdbcType="VARCHAR"/>
+        <result column="AUTH_ID" property="authId" jdbcType="VARCHAR"/>
+        <result column="CREATION_DATE" property="creationDate" jdbcType="TIMESTAMP"/>
+        <result column="INTERFACE_CODE" property="sysName" jdbcType="VARCHAR"/>
+        <result column="LINE_CODE" property="apiName" jdbcType="VARCHAR"/>
+        <result column="SYSTEM_TYPE" property="systemType" jdbcType="VARCHAR"/>
+        <!--HmsAppAuth-->
+        <result column="APP_NAME" property="appName" jdbcType="VARCHAR"/>
+        <result column="APP_ID" property="appId" jdbcType="VARCHAR"/>
+        <result column="IFT_URL" property="iftUrl" jdbcType="VARCHAR"/>
+    </resultMap>
+
+
+    <!--根据headerId获取所有授权信息-->
+    <select id="selectAuthByHeaderId" resultMap="interfaceAuthMap">
+        select
+    i.INTERFACE_AUTH_ID,
+    i.INTERFACE_HEADER_ID,
+    i.AUTH_ID,
+    i.INTERFACE_LINE_ID,
+    i.CREATION_DATE,
+    a.APP_NAME
+from
+    hms_app_auth a,
+    hms_interface_auth i
+where
+    a.ID = i.AUTH_ID
+    and i.INTERFACE_HEADER_ID = #{headerId};
+    </select>
+
+    <!--根据lineId获取所有授权信息-->
+    <select id="selectAuthByLineId" resultMap="interfaceAuthMap">
+        select
+        ia.INTERFACE_AUTH_ID,
+        ia.INTERFACE_HEADER_ID,
+        ia.AUTH_ID,
+        ia.INTERFACE_LINE_ID,
+        ia.CREATION_DATE,
+        aa.APP_NAME,
+        ih.INTERFACE_CODE,
+        ih.SYSTEM_TYPE,
+        il.LINE_CODE,
+        il.IFT_URL
+        from
+        hms_app_auth aa,
+        hms_interface_auth ia,
+        hms_interface_line_b il,
+        hms_interface_header_b ih
+        where
+         ia.INTERFACE_LINE_ID = il.LINE_ID
+        and aa.ID = ia.AUTH_ID
+        and ih.HEADER_ID=il.HEADER_ID
+        and aa.ID = ia.AUTH_ID and il.LINE_ID = #{lineId};
+    </select>
+
+    <select id="selectAllInterfaceHeadAuth" resultMap="interfaceAuthMap">
+        select
+        aa.APP_NAME,
+        aa.APP_ID,
+        ih.INTERFACE_CODE，
+        ia.INTERFACE_HEADER_ID
+        from
+        hms_app_auth aa,
+        hms_interface_auth ia,
+        hms_interface_header_b ih
+        where
+        ia.INTERFACE_HEADER_ID = ih.HEADER_ID
+        and aa.ID = ia.AUTH_ID
+        and ia.enable_flag='Y'
+    </select>
+
+    <select id="selectHeadAuthByAppidAndSysName" resultMap="interfaceAuthMap">
+        select
+        aa.APP_NAME,
+        aa.APP_ID,
+        ih.INTERFACE_CODE,
+        ia.INTERFACE_HEADER_ID
+        from
+        hms_app_auth aa,
+        hms_interface_auth ia,
+        hms_interface_header_b ih
+        where
+        ia.INTERFACE_HEADER_ID = ih.HEADER_ID
+        and aa.ID = ia.AUTH_ID
+        and ia.enable_flag='Y'
+        and ia.INTERFACE_LINE_ID = ''
+        and aa.APP_ID=#{appid,jdbcType=VARCHAR}
+        and ih.INTERFACE_CODE=#{sysName,jdbcType=VARCHAR}
+    </select>
+    <select id="selectAllInterfaceLineAuth" resultMap="interfaceAuthMap">
+        select
+        aa.APP_NAME,
+        aa.APP_ID,
+        ih.INTERFACE_CODE,
+        ih.SYSTEM_TYPE,
+        il.LINE_CODE,
+        il.IFT_URL
+        from
+        hms_app_auth aa,
+        hms_interface_auth ia,
+        hms_interface_line_b il,
+        hms_interface_header_b ih
+        where
+        ia.INTERFACE_LINE_ID = il.LINE_ID
+        and aa.ID = ia.AUTH_ID
+        and ih.HEADER_ID=il.HEADER_ID
+    </select>
+
+    <select id="selectLineAuthByAppidAndSysNameAndUrl" resultMap="interfaceAuthMap">
+        select
+        aa.APP_NAME,
+        aa.APP_ID,
+        ih.INTERFACE_CODE,
+        ih.SYSTEM_TYPE,
+        il.LINE_CODE,
+        il.IFT_URL
+        from
+        hms_app_auth aa,
+        hms_interface_auth ia,
+        hms_interface_line_b il,
+        hms_interface_header_b ih
+        where
+        ia.INTERFACE_LINE_ID = il.LINE_ID
+        and aa.ID = ia.AUTH_ID
+        and ih.HEADER_ID=il.HEADER_ID
+        and aa.APP_ID=#{appid,jdbcType=VARCHAR}
+        and ih.INTERFACE_CODE=#{sysName,jdbcType=VARCHAR}
+        and il.IFT_URL=#{url,jdbcType=VARCHAR}
+    </select>
+
+    <select id="selectLineAuthByAppidAndSysNameAndApiName" resultMap="interfaceAuthMap">
+        select
+        aa.APP_NAME,
+        aa.APP_ID,
+        ih.INTERFACE_CODE,
+        ih.SYSTEM_TYPE,
+        il.LINE_CODE,
+        il.IFT_URL
+        from
+        hms_app_auth aa,
+        hms_interface_auth ia,
+        hms_interface_line_b il,
+        hms_interface_header_b ih
+        where
+        ia.INTERFACE_LINE_ID = il.LINE_ID
+        and aa.ID = ia.AUTH_ID
+        and ih.HEADER_ID=il.HEADER_ID
+        and aa.APP_ID=#{appid,jdbcType=VARCHAR}
+        and ih.INTERFACE_CODE=#{sysName,jdbcType=VARCHAR}
+        and il.LINE_CODE=#{apiName,jdbcType=VARCHAR}
+    </select>
+</mapper>

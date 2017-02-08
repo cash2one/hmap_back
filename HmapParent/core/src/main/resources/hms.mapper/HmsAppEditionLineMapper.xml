@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="hmap.core.hms.edition.mapper.HmsAppEditionLineMapper">
+    <resultMap id="AppEditionLineMap" type="hmap.core.hms.edition.domain.HmsAppEditionLine" extends="com.hand.hap.mapper.StdMapper.STD">
+        <id column="ID" property="id" jdbcType="VARCHAR"/>
+        <result column="APP_EDITION_ID" property="appEditionId" jdbcType="VARCHAR"/>
+        <result column="ORDER_NUM" property="orderNum" jdbcType="NUMERIC"/>
+        <result column="DOWNLOAD_URL" property="downloadUrl" jdbcType="VARCHAR"/>
+        <result column="IS_MINIMUM_EDITION" property="isMinimumEdition" jdbcType="VARCHAR"/>
+        <result column="IS_LATEST_EDITION" property="isLatestEdition" jdbcType="VARCHAR"/>
+        <result column="UPDATE_MESSAGE" property="updateMessage" jdbcType="VARCHAR"/>
+        <result column="EDITION_CODE" property="editionCode" jdbcType="VARCHAR"/>
+        <result column="UPDATE_TYPE" property="updateType" jdbcType="VARCHAR"/>
+        <result column="ENABLE_FLAG" property="enableFlag" jdbcType="VARCHAR"/>
+    </resultMap>
+    <select id="selectByAppId" resultMap="AppEditionLineMap">
+      SELECT * FROM hms_app_edition_line WHERE APP_EDITION_ID = #{appEditionId}
+      ORDER BY ENABLE_FLAG DESC,ORDER_NUM DESC,CREATION_DATE DESC
+    </select>
+    <update id="updateEdition" flushCache="true">
+      UPDATE hms_app_edition_line
+      <set>
+          <if test=' isLatestEdition == "Y" '>IS_LATEST_EDITION = 'N',</if>
+          <if test=' isMinimumEdition == "Y" '>IS_MINIMUM_EDITION = 'N',</if>
+      </set>
+        WHERE
+        1=1
+        <if test='isLatestEdition == "N" and isMinimumEdition=="Y" '> AND IS_MINIMUM_EDITION = 'Y'</if>
+        <if test='isMinimumEdition== "N" and isLatestEdition=="Y" '> AND IS_LATEST_EDITION = 'Y'</if>
+        <if test='isMinimumEdition== "Y" and isLatestEdition=="Y" '>AND (IS_LATEST_EDITION = 'Y' OR IS_MINIMUM_EDITION = 'Y')</if>
+        AND APP_EDITION_ID = #{appEditionId}
+        AND ENABLE_FLAG = 'Y'
+    </update>
+
+</mapper>

@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="hmap.core.hms.distribution.mapper.HmsAppVersionMapper">
+    <resultMap id="appVersionMap" type="hmap.core.hms.distribution.domain.HmsAppVersion"
+               extends="com.hand.hap.mapper.StdMapper.STD">
+        <result column="ID" property="id" jdbcType="VARCHAR"/>
+        <result column="APP_ID" property="appId" jdbcType="VARCHAR"/>
+        <result column="VERSION" property="version" jdbcType="VARCHAR"/>
+        <result column="APP_SIZE" property="appSize" jdbcType="VARCHAR"/>
+        <result column="DOWNLOAD_TIMES" property="downloadTimes" jdbcType="BIGINT"/>
+        <result column="DOWNLOAD_URL" property="downloadUrl" jdbcType="VARCHAR"/>
+        <result column="QR_CDOE" property="qrCode" jdbcType="VARCHAR"/>
+        <result column="BUILD_NUM" property="buildNum" jdbcType="VARCHAR"/>
+        <result column="IS_DISPLAY" property="isDisplay" jdbcType="VARCHAR"/>
+        <result column="IS_CURRENT_VERSION" property="isCurrentVersion" jdbcType="VARCHAR"/>
+        <result column="VERSION_KEY" property="versionKey" jdbcType="VARCHAR"/>
+        <result column="PLIST_URL" property="plistUrl" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <select id="selectCurrentVersion" resultMap="appVersionMap">
+        SELECT
+        av.id,
+        av.APP_ID,
+        av.VERSION,
+        av.APP_SIZE,
+        av.DOWNLOAD_TIMES,
+        av.DOWNLOAD_URL,
+        av.QR_CDOE,
+        av.BUILD_NUM,
+        av.IS_DISPLAY,
+        av.IS_CURRENT_VERSION,
+        av.PLIST_URL
+        FROM
+        hms_app_version av
+        where
+        av.app_id = #{appId}
+        and av.IS_CURRENT_VERSION = 'Y';
+    </select>
+    <select id="selectVersionByKey" resultMap="appVersionMap">
+        SELECT
+        av.id,
+        av.APP_ID,
+        av.VERSION,
+        av.APP_SIZE,
+        av.DOWNLOAD_TIMES,
+        av.DOWNLOAD_URL,
+        av.QR_CDOE,
+        av.BUILD_NUM,
+        av.IS_DISPLAY,
+        av.IS_CURRENT_VERSION,
+        av.PLIST_URL
+        FROM
+        hms_app_version av
+        where
+        av.VERSION_KEY = #{versionKey};
+    </select>
+    <select id="selectAppVersionByAppId" resultMap="appVersionMap">
+        select
+        av.id,
+        av.APP_ID,
+        av.VERSION,
+        av.APP_SIZE,
+        av.DOWNLOAD_TIMES,
+        av.DOWNLOAD_URL,
+        av.QR_CDOE,
+        av.BUILD_NUM,
+        av.IS_DISPLAY,
+        av.IS_CURRENT_VERSION,
+        av.PLIST_URL
+        from
+        hms_app_version av
+        where
+        av.app_id = #{appId}
+        order by av.creation_date desc
+    </select>
+</mapper>

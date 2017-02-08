@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="hmap.core.hms.system.mapper.SysPromptMapper">
+    <resultMap id="sysPromptsMap" type="hmap.core.hms.system.domain.SysPrompt" extends="com.hand.hap.mapper.StdMapper.STD">
+        <result column="PROMPT_ID" property="promptId" jdbcType="DECIMAL"/>
+        <result column="PROMPT_CODE" property="promptCode" jdbcType="VARCHAR"/>
+        <result column="LANG" property="lang" jdbcType="VARCHAR"/>
+        <result column="DESCRIPTION" property="description" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <select id="selectAllPrompts" resultMap="sysPromptsMap">
+        select p.* from sys_prompts p
+        where 1=1
+        <if test="promptCode != null ">
+            and p.PROMPT_CODE like '%${promptCode}%'
+        </if>
+        <if test="description != null ">
+            and p.DESCRIPTION like '%${description}%'
+        </if>
+        <if test="lang != null ">
+            and p.LANG = #{lang}
+        </if>
+    </select>
+
+    <select id="selectByPromptId" resultMap="sysPromptsMap">
+        select * from sys_prompts where PROMPT_ID = #{promptId}
+    </select>
+</mapper>

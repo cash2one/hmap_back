@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="hmap.core.hms.device.mapper.HmsDeviceMapper">
+    <resultMap id="hmsDeviceManagementMap" type="hmap.core.hms.device.domain.HmsDevice" extends="com.hand.hap.mapper.StdMapper.STD">
+        <id column="DEVICE_ID" property="deviceId" jdbcType="VARCHAR"/>
+        <result column="DEVICE_BRAND" property="deviceBrand" jdbcType="VARCHAR"/>
+        <result column="DEVICE_TYPE" property="deviceType" jdbcType="VARCHAR"/>
+        <result column="OPERATION_SYSTEM" property="operationSystem" jdbcType="VARCHAR"/>
+        <result column="OPERATION_SYSTEM_VERSION" property="operationSystemVersion" jdbcType="VARCHAR"/>
+        <result column="CLIENT_VERSION" property="clientVersion" jdbcType="VARCHAR"/>
+        <result column="DEVICE_USER" property="deviceUser" jdbcType="VARCHAR"/>
+        <result column="DEVICE_FLAG" property="deviceFlag" jdbcType="VARCHAR" />
+        <result column="IME" property="ime" jdbcType="VARCHAR" />
+        <result column="WIDTH" property="width" jdbcType="VARCHAR" />
+        <result column="HEIGHT" property="height" jdbcType="VARCHAR" />
+        <result column="PIXEL_RATIO" property="pixelRatio" jdbcType="VARCHAR" />
+    </resultMap>
+
+    <resultMap id="barsMap" type="HashMap">
+        <result column="OPERATION_SYSTEM_VERSION" property="operationSystemVersion" jdbcType="VARCHAR"/>
+        <collection column="BARS_LIST" property="barsList" resultMap="barsListMap" javaType="ArrayList"></collection>
+    </resultMap>
+
+    <resultMap id="barsListMap" type="HashMap">
+        <result column="VALUE" property="value" jdbcType="INTEGER"/>
+        <result column="OPERATION_SYSTEM" property="operationSystem" jdbcType="VARCHAR"/>
+        <result column="OPERATION_SYSTEM_VERSION" property="operationSystemVersion" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <select id="selectByUser" resultMap="hmsDeviceManagementMap">
+        select DEVICE_ID,DEVICE_BRAND,DEVICE_TYPE,OPERATION_SYSTEM,OPERATION_SYSTEM_VERSION,
+        CREATION_DATE,DEVICE_FLAG,IME,DEVICE_USER,CLIENT_VERSION
+        from hms_device
+        where 1=1
+        <if test="deviceUser!=null">AND DEVICE_USER LIKE "%${deviceUser}%"</if>
+    </select>
+    <select id="selectByDeviceId" resultMap="hmsDeviceManagementMap">
+        SELECT * FROM hms_device WHERE DEVICE_ID=#{deviceId}
+    </select>
+    <select id="selectByIME" resultMap="hmsDeviceManagementMap">
+        SELECT * FROM hms_device WHERE IME=#{ime}
+    </select>
+    <select id="selectByIMEAndUser" resultMap="hmsDeviceManagementMap">
+        SELECT DEVICE_ID,DEVICE_BRAND,DEVICE_TYPE,OPERATION_SYSTEM,OPERATION_SYSTEM_VERSION,
+        CREATION_DATE,DEVICE_FLAG,IME,DEVICE_USER,CLIENT_VERSION
+        FROM hms_device WHERE IME=#{ime} AND DEVICE_USER LIKE "${object}%"
+    </select>
+    <update id="updateFlag" flushCache="true">
+        update hms_device
+        SET
+        DEVICE_FLAG="N"
+        WHERE DEVICE_ID="${deviceId}"
+    </update>
+    <update id="updateDevice">
+        update hms_device
+        SET
+        DEVICE_BRAND=#{hmsDevice.deviceBrand},DEVICE_TYPE=#{hmsDevice.deviceType},
+        OPERATION_SYSTEM=#{hmsDevice.operationSystem},OPERATION_SYSTEM_VERSION=#{hmsDevice.operationSystemVersion},
+        DEVICE_FLAG=#{hmsDevice.deviceFlag},DEVICE_USER=#{hmsDevice.deviceUser},
+        CLIENT_VERSION=#{hmsDevice.clientVersion},WIDTH=#{hmsDevice.width},HEIGHT=#{hmsDevice.height},
+        PIXEL_RATIO=#{hmsDevice.pixelRatio}
+        WHERE IME=#{hmsDevice.ime}
+    </update>
+    <select id="selectCountByUser" resultType="java.lang.Long">
+        select COUNT(*)
+        from hms_device
+        where 1=1
+        <if test="deviceUser!=null">AND DEVICE_USER LIKE "%${deviceUser}%"</if>
+    </select>
+
+    <insert id="insertDeviceWithOption" flushCache="true">
+          INSERT INTO hms_device
+          (DEVICE_ID,DEVICE_BRAND,DEVICE_TYPE,OPERATION_SYSTEM,OPERATION_SYSTEM_VERSION,CLIENT_VERSION,
+          DEVICE_USER,DEVICE_FLAG,IME,WIDTH,HEIGHT,PIXEL_RATIO,CREATION_DATE,LAST_UPDATE_DATE)
+          SELECT * FROM (SELECT "${hmsDevice.deviceId}" DEVICE_ID, "${hmsDevice.deviceBrand}" DEVICE_BRAND,
+         "${hmsDevice.deviceType}" DEVICE_TYPE, "${hmsDevice.operationSystem}" OPERATION_SYSTEM,
+         "${hmsDevice.operationSystemVersion}" OPERATION_SYSTEM_VERSION,"${hmsDevice.clientVersion}" CLIENT_VERSION,
+         "${hmsDevice.deviceUser}" DEVICE_USER,"${hmsDevice.deviceFlag}" DEVICE_FLAG, "${hmsDevice.ime}" IME,
+         "${hmsDevice.width}" WIDTH,"${hmsDevice.height}" HEIGHT,"${hmsDevice.pixelRatio}" PIXEL_RATIO,
+         CURRENT_TIMESTAMP CREATION_DATE ,CURRENT_TIMESTAMP LAST_UPDATE_DATE) AS tmp
+          WHERE
+          (SELECT count(*) from hms_device a where a.ime="${hmsDevice.ime}"
+          and a.DEVICE_USER LIKE "%${object}%") = 0
+    </insert>
+
+    <insert id="insertDevice" flushCache="true">
+        INSERT INTO hms_device(
+        DEVICE_ID,DEVICE_BRAND,DEVICE_TYPE,OPERATION_SYSTEM,OPERATION_SYSTEM_VERSION,DEVICE_USER,DEVICE_FLAG,
+        CLIENT_VERSION,CREATION_DATE,IME,WIDTH,HEIGHT,PIXEL_RATIO
+        )
+        VALUES (
+        "${hmsDevice.deviceId}","${hmsDevice.deviceBrand}",
+        "${hmsDevice.deviceType}","${hmsDevice.operationSystem}","${hmsDevice.operationSystemVersion}",
+        "${hmsDevice.deviceUser}","${hmsDevice.deviceFlag}","${hmsDevice.clientVersion}",CURRENT_TIMESTAMP,
+        "${hmsDevice.ime}","${hmsDevice.width}","${hmsDevice.height}","${hmsDevice.pixelRatio}"
+        )
+    </insert>
+
+    <select id="getPlatform" resultType="java.lang.Integer">
+        select count(*) from hms_device where OPERATION_SYSTEM like "%${platform}%";
+    </select>
+
+    <select id="getStatus" resultType="java.lang.Integer">
+        select count(*) from hms_device where DEVICE_FLAG=#{flag};
+    </select>
+
+    <select id="getBars" resultMap="barsMap">
+        SELECT a.OPERATION_SYSTEM,a.OPERATION_SYSTEM_VERSION,COUNT(*) VALUE from hms_device a
+        GROUP BY a.OPERATION_SYSTEM,a.OPERATION_SYSTEM_VERSION
+    </select>
+</mapper>

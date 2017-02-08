@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="hmap.core.hms.mapper.HmsWxSynMapper">
+
+	<resultMap id="BaseResultMap" type="hmap.core.hms.domain.HmsWxSyn">
+		<id column="id" property="id" jdbcType="BIGINT" />
+		<result column="type" property="type" jdbcType="VARCHAR" />
+		<result column="source_id" property="sourceId" jdbcType="BIGINT" />
+		<result column="operation" property="operation" jdbcType="BIGINT" />
+		<result column="try_time" property="tryTime" jdbcType="VARCHAR" />
+		<result column="status" property="status" jdbcType="VARCHAR" />
+		<result column="error_message" property="errorMessage" jdbcType="VARCHAR" />
+		<result column="object_version_number" property="objectVersionNumber" jdbcType="BIGINT" />
+		<result column="creation_date" property="creationDate" jdbcType="TIMESTAMP" />
+		<result column="created_by" property="createdBy" jdbcType="BIGINT" />
+		<result column="last_updated_by" property="lastUpdatedBy" jdbcType="BIGINT" />
+		<result column="last_update_date" property="lastUpdateDate" jdbcType="TIMESTAMP" />
+		<result column="last_update_login" property="lastUpdateLogin" jdbcType="BIGINT" />
+		<result column="attribute_category" property="attributeCategory" jdbcType="VARCHAR" />
+		<result column="attribute1" property="attribute1" jdbcType="VARCHAR" />
+		<result column="attribute2" property="attribute2" jdbcType="VARCHAR" />
+		<result column="attribute3" property="attribute3" jdbcType="VARCHAR" />
+		<result column="attribute4" property="attribute4" jdbcType="VARCHAR" />
+		<result column="attribute5" property="attribute5" jdbcType="VARCHAR" />
+		<result column="attribute6" property="attribute6" jdbcType="VARCHAR" />
+		<result column="attribute7" property="attribute7" jdbcType="VARCHAR" />
+		<result column="attribute8" property="attribute8" jdbcType="VARCHAR" />
+		<result column="attribute9" property="attribute9" jdbcType="VARCHAR" />
+		<result column="attribute10" property="attribute10" jdbcType="VARCHAR" />
+		<result column="attribute11" property="attribute11" jdbcType="VARCHAR" />
+		<result column="attribute12" property="attribute12" jdbcType="VARCHAR" />
+		<result column="attribute13" property="attribute13" jdbcType="VARCHAR" />
+		<result column="attribute14" property="attribute14" jdbcType="VARCHAR" />
+		<result column="attribute15" property="attribute15" jdbcType="VARCHAR" />
+	</resultMap>
+
+
+<!--	<select id="selectByTypeAndOperation" resultMap="BaseResultMap">
+		SELECT * FROM hms_wx_syn WHERE type = #{0} and operation=#{1} and status='PENDING' and try_time &lt; 5
+	</select>
+
+	<select id="selectByTypeAndOperation" resultMap="BaseResultMap">
+		SELECT * FROM hms_wx_syn WHERE type = #{0} and status='PENDING' and try_time &lt; 5
+	</select>-->
+
+	<select id="selectPending" resultMap="BaseResultMap">
+		SELECT * FROM hms_wx_syn WHERE status='PENDING' and try_time &lt; 5
+	</select>
+
+
+
+
+
+</mapper>
+

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="hmap.core.hms.system.mapper.SysUserMapper">
+    <resultMap id="sysUserMap" type="hmap.core.hms.system.domain.SysUser" extends="com.hand.hap.mapper.StdMapper.STD">
+        <id column="USER_ID" property="userId" jdbcType="BIGINT"/>
+        <result column="USER_NAME" property="userName" jdbcType="VARCHAR"/>
+    </resultMap>
+    <select id="selectByUserName" resultMap="sysUserMap">
+        select user_id,user_name from sys_user where user_name = #{user_name}
+    </select>
+</mapper>

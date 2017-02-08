@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="hmap.core.hms.mapper.HmsContentMapper" >
+    <resultMap id="ContentMap" type="hmap.core.hms.domain.HmsContent" >
+        <id column="id" property="id" jdbcType="VARCHAR"/>
+        <result column="content_title" property="contentTitle" jdbcType="VARCHAR"/>
+        <result column="content_type" property="contentType" jdbcType="VARCHAR"/>
+        <result column="content_author" property="contentAuthor" jdbcType="VARCHAR"/>
+        <result column="content_body" property="contentBody" jdbcType="VARCHAR"/>
+        <result column="content_cover" property="contentCover" jdbcType="VARCHAR"/>
+        <result column="content_subject" property="contentSubject" jdbcType="VARCHAR"/>
+        <result column="content_status" property="contentStatus" jdbcType="VARCHAR"/>
+        <result column="template_id" property="templateId" jdbcType="VARCHAR"/>
+        <result column="maximum_person" property="maximumPerson" jdbcType="DECIMAL"/>
+        <result column="creation_date" property="creationDate" jdbcType="VARCHAR"/>
+        <result column="created_by" property="createdBy" jdbcType="VARCHAR"/>
+        <result column="last_updated_by" property="lastUpdatedBy" jdbcType="VARCHAR"/>
+        <result column="last_update_date" property="lastUpdateDate" jdbcType="VARCHAR"/>
+        <result column="reply_flag" property="replyFlag" jdbcType="VARCHAR"/>
+        <result column="security_flag" property="securityFlag" jdbcType="VARCHAR"/>
+        <result column="shared_flag" property="sharedFlag" jdbcType="VARCHAR"/>
+        <result column="version" property="version" jdbcType="DECIMAL"/>
+        <result column="enroll_flag" property="enrollFlag" jdbcType="VARCHAR"/>
+        <result column="enroll_end_date" property="enrollEndDate" jdbcType="VARCHAR"/>
+
+    </resultMap>
+</mapper>

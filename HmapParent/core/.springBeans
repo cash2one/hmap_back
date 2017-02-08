@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beansProjectDescription>
+	<version>1</version>
+	<pluginVersion><![CDATA[3.6.2.me201411251616]]></pluginVersion>
+	<configSuffixes>
+		<configSuffix><![CDATA[xml]]></configSuffix>
+	</configSuffixes>
+	<enableImports><![CDATA[false]]></enableImports>
+	<configs>
+	</configs>
+	<autoconfigs>
+		<config>src/main/resources/spring/applicationContext-redis.xml</config>
+		<config>src/main/resources/spring/appServlet/servlet-context.xml</config>
+		<config>src/test/resources/spring/applicationContext-beans.xml</config>
+		<config>src/main/resources/spring/applicationContext-security.xml</config>
+		<config>src/test/resources/spring/applicationContext-job.xml</config>
+		<config>src/test/resources/spring/applicationContext.xml</config>
+		<config>src/test/resources/spring/applicationContext-msg.xml</config>
+		<config>src/test/resources/spring/applicationContext-elasticsearch.xml</config>
+		<config>src/test/resources/spring/applicationContext-redis.xml</config>
+		<config>src/test/resources/spring/appServlet/servlet-context.xml</config>
+		<config>src/test/resources/spring/applicationContext-security.xml</config>
+		<config>src/test/resources/spring/applicationContext-ext.xml</config>
+	</autoconfigs>
+	<configSets>
+	</configSets>
+</beansProjectDescription>

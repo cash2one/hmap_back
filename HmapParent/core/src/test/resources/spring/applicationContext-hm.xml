@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd">
+
+
+    <!--<bean class="hmap.core.beans.CorsConfigurerAdapter"></bean>-->
+
+    <bean id="aliYunUploaderService"
+          class="hmap.core.hms.uploader.service.impl.AliYunUploaderServiceImpl">
+        <property name="name" value="aliyun"/>
+    </bean>
+    <bean id="sftpUploaderService"
+          class="hmap.core.hms.uploader.service.impl.SftpUploaderServiceImpl">
+        <property name="name" value="sftp"/>
+    </bean>
+
+    <bean class="hmap.core.hms.uploader.service.impl.UploaderMangerImpl">
+        <property name="uploads">
+            <list>
+                <ref bean="sftpUploaderService"/>
+                <ref bean="aliYunUploaderService"/>
+            </list>
+        </property>
+    </bean>
+
+    <bean class="hmap.core.beans.JDBCSqlSessionFactory">
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+
+    <bean id="plsqlBean" class="hmap.core.hms.api.service.impl.PLSQLApiServiceImpl"></bean>
+    <bean id="restBean" class="hmap.core.hms.api.service.impl.RestApiServiceImpl"></bean>
+    <bean id="soapBean" class="hmap.core.hms.api.service.impl.SoapApiServiceImpl"></bean>
+    <bean id="staffIndexConsumer" class="hmap.core.message.impl.StaffIndexConsumer"></bean>
+</beans>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="hmap.core.hms.contact.mapper.HmsContactTagMemberMapper">
+       <resultMap id="BaseResultMap" type="hmap.core.hms.contact.domain.HmsContactTagMember" extends="com.hand.hap.mapper.StdMapper.STD">
+              <id column="ID" property="id" jdbcType="VARCHAR"/>
+              <result column="TAG_ID" property="tagId" jdbcType="VARCHAR"/>
+              <result column="MEMBER_NAME" property="memberName" jdbcType="VARCHAR"/>
+              <result column="MEMBER_ID" property="memberId" jdbcType="VARCHAR"/>
+              <result column="MEMBER_TYPE" property="memberType" jdbcType="VARCHAR"/>
+       </resultMap>
+
+       <select id="selectWithApplicationPermission" resultMap="BaseResultMap">
+               select * from hms_contact_tag_member m,hms_application_permission p
+               where
+                 p.VISIBILITY_TYPE = #{visibilityType,jdbcType=VARCHAR}
+                 AND
+                 DATA_TYPE ='TAG'
+                 AND
+                 m.TAG_ID = p.DATA_KEY
+       </select>
+</mapper>

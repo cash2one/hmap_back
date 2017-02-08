@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+  ~ #{copyright}#
+  -->
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hand.hap.account.mapper.UserMapper">
+    <resultMap id="BaseResultMap" type="com.hand.hap.account.dto.User" extends="com.hand.hap.mapper.StdMapper.STD">
+        <id column="USER_ID" property="userId" jdbcType="DECIMAL" />
+        <result column="USER_NAME" property="userName" jdbcType="VARCHAR" />
+        <result column="PASSWORD_ENCRYPTED" property="passwordEncrypted" jdbcType="VARCHAR" />
+        <result column="EMAIL" property="email" jdbcType="VARCHAR" />
+        <result column="PHONE" property="phone" jdbcType="VARCHAR" />
+        <result column="START_ACTIVE_DATE" property="startActiveDate" javaType="DATE"/>
+        <result column="END_ACTIVE_DATE" property="endActiveDate" javaType="DATE"/>
+        <result column="STATUS" property="status" jdbcType="VARCHAR" />
+    </resultMap>
+
+
+    <sql id="Base_Column_List">
+        USER_ID, USER_NAME,PASSWORD_ENCRYPTED, USER_TYPE, EMAIL, PHONE, START_ACTIVE_DATE,
+        END_ACTIVE_DATE, STATUS
+    </sql>
+    <update id="updatePassword">
+        update sys_user u
+        set u.password_encrypted = #{password,jdbcType=VARCHAR}
+        where u.user_id = #{userId,jdbcType=DECIMAL}
+    </update>
+    <update id="updateUserInfo" parameterType="com.hand.hap.account.dto.User">
+        update sys_user u
+        set
+          u.status=#{status},
+          u.email=#{email},
+          u.phone=#{phone}
+          where u.user_id = #{userId}
+    </update>
+
+    <select id="selectByUserName" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select
+        <include refid="Base_Column_List" />,
+        <include refid="com.hand.hap.mapper.StdMapper.Base_Column_List"/>
+        from SYS_USER
+        where UPPER(USER_NAME)  = UPPER (#{userName,jdbcType=VARCHAR})
+    </select>
+    <select id="selectListByUserName" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select
+        <include refid="Base_Column_List" />,
+        <include refid="com.hand.hap.mapper.StdMapper.Base_Column_List"/>
+        from SYS_USER
+        where UPPER(USER_NAME)  LIKE  concat('%',UPPER (#{userName,jdbcType=VARCHAR}),'%')
+    </select>
+
+    <select id="selectByIdList" resultMap="BaseResultMap">
+        select
+        USER_ID, EMAIL, USER_NAME
+        from SYS_USER
+        where USER_ID in
+        <foreach collection="list" open="(" separator="," close=")" item="userId" index="index">
+            #{userId,jdbcType=DECIMAL}
+        </foreach>
+    </select>
+
+</mapper>

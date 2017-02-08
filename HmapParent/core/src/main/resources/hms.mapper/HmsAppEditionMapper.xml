@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="hmap.core.hms.edition.mapper.HmsAppEditionMapper">
+    <resultMap id="AppEditionMap" type="hmap.core.hms.edition.domain.HmsAppEdition" extends="com.hand.hap.mapper.StdMapper.STD">
+        <id column="ID" property="id" jdbcType="VARCHAR"/>
+        <result column="APP_ID" property="appId" jdbcType="VARCHAR"/>
+        <result column="APP_EQUIPMENT" property="appEquipment" jdbcType="VARCHAR"/>
+        <result column="ENABLE_FLAG" property="enableFlag" jdbcType="VARCHAR"/>
+        <result column="APP_HOMEPAGE" property="appHomepage" jdbcType="VARCHAR"/>
+        <result column="DOWNLOAD_URL" property="downloadUrl" jdbcType="VARCHAR"/>
+    </resultMap>
+    <resultMap id="AppInfoMap" type="hmap.core.hms.dto.HmsAppInfoDto" extends="com.hand.hap.mapper.StdMapper.STD">
+        <id column="ID" property="id" jdbcType="VARCHAR"/>
+        <result column="APP_NAME" property="appName" jdbcType="VARCHAR"/>
+        <result column="APP_ID" property="appId" jdbcType="VARCHAR"/>
+        <result column="APP_EQUIPMENT" property="appEquipment" jdbcType="VARCHAR"/>
+        <result column="ENABLE_FLAG" property="enableFlag" jdbcType="VARCHAR"/>
+        <result column="APP_HOMEPAGE" property="appHomepage" jdbcType="VARCHAR"/>
+        <result column="DOWNLOAD_URL" property="downloadUrl" jdbcType="VARCHAR"/>
+    </resultMap>
+    <resultMap id="AppEditionInfoMap" type="HashMap">
+        <result column="EDITION_CODE" property="editionCode" jdbcType="VARCHAR"/>
+        <result column="IS_MINIMUM_EDITION" property="isMinimumEdition" jdbcType="VARCHAR"/>
+        <result column="IS_LATEST_EDITION" property="isLatestEdition" jdbcType="VARCHAR"/>
+        <result column="ORDER_NUM" property="orderNum" jdbcType="NUMERIC"/>
+    </resultMap>
+    <resultMap id="AppEditionDetailInfoMap" type="hmap.core.hms.edition.dto.HmapAppEditionResponseDto" extends="com.hand.hap.mapper.StdMapper.STD">
+        <result column="APP_NAME" property="appName" jdbcType="VARCHAR"/>
+        <result column="APP_ID" property="appId" jdbcType="VARCHAR"/>
+        <result column="APP_HOMEPAGE" property="appHomepage" jdbcType="VARCHAR"/>
+        <result column="APP_EQUIPMENT" property="appEquipment" jdbcType="VARCHAR"/>
+        <result column="DOWNLOAD_URL" property="downloadUrl" jdbcType="VARCHAR"/>
+        <result column="EDITION_CODE" property="editionCode" jdbcType="VARCHAR"/>
+        <result column="IS_LATEST_EDITION" property="isMinimumEdition" jdbcType="VARCHAR"/>
+        <result column="IS_MINIMUM_EDITION" property="isLatestEdition" jdbcType="VARCHAR"/>
+        <result column="UPDATE_MESSAGE" property="updateMessage" jdbcType="VARCHAR"/>
+        <result column="UPDATE_TYPE" property="updateType" jdbcType="VARCHAR"/>
+        <result column="ORDER_NUM" property="orderNum" jdbcType="NUMERIC"/>
+    </resultMap>
+    <select id="selectById" resultMap="AppEditionMap">
+      select * from HMS_APP_EDITION where id = #{id}
+    </select>
+    <select id="selectByAppIdAndAppEquipment" resultMap="AppEditionMap">
+        select * from HMS_APP_EDITION a where a.APP_ID = #{appId} and a.APP_EQUIPMENT = #{appEquipment}
+    </select>
+    <select id="selectAppInfoList" resultMap="AppInfoMap">
+        SELECT
+            hae.id,
+            hae.APP_ID,
+            hae.APP_EQUIPMENT,
+            hae.ENABLE_FLAG,
+            hae.APP_HOMEPAGE,
+            hae.DOWNLOAD_URL,
+            haa.APP_NAME
+        FROM
+            hms_app_edition hae
+        LEFT JOIN hms_app_auth haa ON haa.APP_ID = hae.APP_ID
+        ORDER BY
+            hae.CREATION_DATE
+    </select>
+    <select id="selectAppInfoByAppIdAndAppEquipment" resultMap="AppInfoMap">
+        SELECT
+        hae.id,
+        hae.APP_ID,
+        hae.APP_EQUIPMENT,
+        hae.ENABLE_FLAG,
+        hae.APP_HOMEPAGE,
+        hae.DOWNLOAD_URL,
+        haa.APP_NAME
+        FROM
+        hms_app_edition hae
+        LEFT JOIN hms_app_auth haa ON haa.APP_ID = hae.APP_ID
+        WHERE hae.APP_ID = #{appId} and hae.APP_EQUIPMENT = #{appEquipment}
+    </select>
+    <select id="selectAppInfoByApp" resultMap="AppInfoMap">
+        SELECT
+        hae.id,
+        hae.APP_ID,
+        hae.APP_EQUIPMENT,
+        hae.ENABLE_FLAG,
+        hae.APP_HOMEPAGE,
+        hae.DOWNLOAD_URL,
+        haa.APP_NAME
+        FROM
+        hms_app_edition hae
+        LEFT JOIN hms_app_auth haa ON haa.APP_ID = hae.APP_ID
+        WHERE hae.id = #{id}
+    </select>
+    <select id="selectAppInfoById" resultMap="AppInfoMap">
+        SELECT
+        hae.id,
+        hae.APP_ID,
+        hae.APP_EQUIPMENT,
+        hae.ENABLE_FLAG,
+        hae.APP_HOMEPAGE,
+        hae.DOWNLOAD_URL,
+        haa.APP_NAME
+        FROM
+        hms_app_edition hae
+        LEFT JOIN hms_app_auth haa ON haa.APP_ID = hae.APP_ID
+        WHERE hae.id = #{id}
+    </select>
+    <select id="selectAppEditionInfo" resultMap="AppEditionInfoMap">
+        SELECT
+          hael.EDITION_CODE,
+          hael.IS_MINIMUM_EDITION,
+          hael.IS_LATEST_EDITION,
+          hael.ORDER_NUM
+        FROM
+            hms_app_edition hae
+        LEFT JOIN hms_app_edition_line hael ON hae.ID = hael.APP_EDITION_ID
+        WHERE
+        hae.APP_EQUIPMENT = #{hmapAppEditionRequestDto.appEquipment}
+        AND
+        hae.APP_ID = #{hmapAppEditionRequestDto.appId}
+        AND
+        hae.ENABLE_FLAG = 'Y'
+        AND
+        (hael.EDITION_CODE  = #{hmapAppEditionRequestDto.appEditionCode}
+        OR hael.IS_MINIMUM_EDITION = 'Y'
+        OR hael.IS_LATEST_EDITION = 'Y'
+        )
+    </select>
+    <select id="selectByAppIdAndAppEquipmentAndAppEditionCode" resultMap="AppEditionDetailInfoMap">
+            SELECT * FROM
+            (SELECT
+              haa.APP_NAME,
+              hae.APP_ID,
+              hae.APP_HOMEPAGE,
+              hae.APP_EQUIPMENT,
+              hael.DOWNLOAD_URL,
+              hael.EDITION_CODE,
+              hael.IS_LATEST_EDITION,
+              hael.IS_MINIMUM_EDITION,
+              hael.UPDATE_MESSAGE,
+              hael.UPDATE_TYPE,
+              hael.ORDER_NUM
+            FROM
+                hms_app_edition hae
+            LEFT JOIN hms_app_edition_line hael ON hae.ID = hael.APP_EDITION_ID
+            LEFT JOIN hms_app_auth haa ON haa.APP_ID = hae.APP_ID
+            WHERE
+            hae.APP_EQUIPMENT = #{hmapAppEditionRequestDto.appEquipment}
+            AND
+            hae.APP_ID = #{hmapAppEditionRequestDto.appId}
+            AND hael.ENABLE_FLAG = 'Y') editionInfo
+            <if test='condition == "MaxOrderNum"'>
+            ORDER BY editionInfo.ORDER_NUM DESC LIMIT 1
+            </if>
+            <if test='condition == "IsLatestEditionIsY"'>
+                WHERE
+                editionInfo.IS_LATEST_EDITION = 'Y'
+                ORDER BY
+                editionInfo.ORDER_NUM DESC
+                LIMIT 1
+            </if>
+            <if test='condition == "IsMinimumEditionIsY"'>
+                WHERE
+                editionInfo.IS_MINIMUM_EDITION = 'Y'
+                ORDER BY
+                editionInfo.ORDER_NUM DESC
+                LIMIT 1
+            </if>
+            <if test='condition == "IsLatestEditionInApplicationStore"'>
+                WHERE
+                editionInfo.UPDATE_TYPE = "ApplicationStore"
+                <if test='latestEditionOrderNum !=-1'>
+                    AND editionInfo.ORDER_NUM <![CDATA[<=]]> #{latestEditionOrderNum}
+                 </if>
+                <if test='nowEditionOrderNum !=-1'>
+                    AND editionInfo.ORDER_NUM <![CDATA[>]]> #{nowEditionOrderNum}
+                </if>
+                ORDER BY
+                editionInfo.ORDER_NUM DESC
+                LIMIT 1
+            </if>
+            <if test='condition == "IsMinimumEditionInApplicationStore"'>
+                WHERE
+                editionInfo.UPDATE_TYPE = "ApplicationStore"
+                <if test='latestEditionOrderNum !=-1'>
+                    AND editionInfo.ORDER_NUM <![CDATA[<=]]> #{minimumEditionOrderNum}
+                </if>
+                <if test='nowEditionOrderNum !=-1'>
+                    AND editionInfo.ORDER_NUM <![CDATA[>]]> #{nowEditionOrderNum}
+                </if>
+                ORDER BY
+                editionInfo.ORDER_NUM DESC
+                LIMIT 1
+            </if>
+    </select>
+    <!--<select id="getAllAppeditionApp" resultMap="headerResultMap">-->
+        <!--SELECT-->
+        <!--ID,app,APP_NAME,APP_CODE,APP_EQUIPMENT,APP_SECRET,ENABLE_FLAG,APP_HOMEPAGE,-->
+        <!--from hms_app_edition-->
+    <!--</select>-->
+
+</mapper>

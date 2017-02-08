@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="hmap.core.hms.api.mapper.HmsLineMapper">
+
+    <resultMap id="lineResultMap" type="hmap.core.hms.api.dto.LineAndLineTlDTO" extends="com.hand.hap.mapper.StdMapper.STD">
+        <id column="LINE_ID" property="lineId" jdbcType="VARCHAR"/>
+        <result column="HEADER_ID" property="headerId" jdbcType="VARCHAR"/>
+        <result column="LINE_CODE" property="lineCode" jdbcType="VARCHAR"/>
+        <result column="IFT_URL" property="iftUrl" jdbcType="VARCHAR"/>
+        <result column="MOCK_LINE_URL" property="mockLineUrl" jdbcType="VARCHAR"/>
+        <result column="IS_MOCK_LINE" property="isMockLine" jdbcType="VARCHAR"/>
+        <result column="ENABLE_FLAG" property="enableFlag" jdbcType="VARCHAR"/>
+
+        <result column="LANG" property="lang" jdbcType="VARCHAR"/>
+        <result column="LINE_NAME" property="lineName" jdbcType="VARCHAR"/>
+        <result column="LINE_DESCRIPTION" property="lineDescription" jdbcType="VARCHAR"/>
+        <result column="OBJ_TO_ARR" property="objToArr" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <resultMap id="headerLineByLineIdResultMap" type="hmap.core.hms.api.dto.HeaderAndLineDTO">
+        <result column="INTERFACE_CODE" property="interfaceCode" jdbcType="VARCHAR"/>
+        <result column="INTERFACE_TYPE" property="interfaceType" jdbcType="VARCHAR"/>
+        <result column="BODY_HEADER" property="bodyHeader" jdbcType="VARCHAR"/>
+        <result column="BODY_TAIL" property="bodyTail" jdbcType="VARCHAR"/>
+        <result column="NAMESPACE" property="namespace" jdbcType="VARCHAR"/>
+        <result column="DOMAIN_URL" property="domainUrl" jdbcType="VARCHAR"/>
+        <result column="REQUEST_METHOD" property="requestMethod" jdbcType="VARCHAR"/>
+        <result column="REQUEST_FORMAT" property="requestFormat" jdbcType="VARCHAR"/>
+        <result column="REQUEST_CONTENTTYPE" property="requestContenttype" jdbcType="VARCHAR"/>
+        <result column="REQUEST_ACCEPT" property="requestAccept" jdbcType="VARCHAR"/>
+        <result column="AUTH_USERNAME" property="authUsername" jdbcType="VARCHAR"/>
+        <result column="AUTH_PASSWORD" property="authPassword" jdbcType="VARCHAR"/>
+        <result column="ENABLE_FLAG" property="enableFlag" jdbcType="VARCHAR"/>
+        <result column="MAPPER_CLASS" property="mapperClass" jdbcType="VARCHAR"/>
+        <result column="SYSTEM_TYPE" property="systemType" jdbcType="VARCHAR"/>
+        <result column="AUTH_TYPE" property="authType" jdbcType="VARCHAR"/>
+        <result column="GRANT_TYPE" property="grantType" jdbcType="VARCHAR"/>
+        <result column="ACCESS_TOKEN_URL" property="accessTokenUrl" jdbcType="VARCHAR"/>
+        <result column="THIRDPARTY_ID" property="thirdpartyId" jdbcType="VARCHAR"/>
+        <result column="MOCK_URL" property="mockUrl" jdbcType="VARCHAR"/>
+        <result column="IS_MOCK" property="isMock" jdbcType="VARCHAR"/>
+        <!--ItfInterfaceLine-->
+        <!--<id property="lineId" column="LINE_ID" jdbcType="DECIMAL"/>
+        <result property="headerId" column="HEADER_ID" jdbcType="DECIMAL"/>-->
+        <result property="lineCode" column="LINE_CODE" jdbcType="VARCHAR"/>
+        <result property="iftUrl" column="IFT_URL" jdbcType="VARCHAR"/>
+        <result column="MOCK_LINE_URL" property="mockLineUrl" jdbcType="VARCHAR"/>
+        <result column="IS_MOCK_LINE" property="isMockLine" jdbcType="VARCHAR"/>
+        <result property="enableFlag" column="ENABLE_FLAG" jdbcType="VARCHAR"/>
+        <result column="OBJ_TO_ARR" property="objToArr" jdbcType="VARCHAR"/>
+    </resultMap>
+
+
+    <select id="getLineAndLineTl" resultMap="lineResultMap">
+        SELECT
+             line.LINE_ID , line.HEADER_ID , line.LINE_CODE , line.IFT_URL , line.ENABLE_FLAG,line.OBJ_TO_ARR,
+             line.MOCK_LINE_URL,line.IS_MOCK_LINE,
+             lineTl.LANG , lineTl.LINE_NAME , lineTl.LINE_DESCRIPTION
+        FROM
+            hms_interface_line_b line ,
+            hms_interface_line_tl lineTl
+        WHERE
+            line.LINE_ID = lineTl.LINE_ID
+        and
+            line.LINE_ID = #{lineId}
+        and
+            lineTl.LANG = #{lang}
+
+    </select>
+
+    <select id="getHeaderLineByLineId" resultMap="headerLineByLineIdResultMap" parameterType="java.lang.String">
+        SELECT
+            header.INTERFACE_CODE,header.INTERFACE_TYPE,header.BODY_HEADER,
+            header.BODY_TAIL,header.NAMESPACE,header.DOMAIN_URL,header.REQUEST_METHOD,
+            header.REQUEST_FORMAT,header.REQUEST_CONTENTTYPE,header.REQUEST_ACCEPT,
+            header.AUTH_TYPE,header.GRANT_TYPE,header.ACCESS_TOKEN_URL,header.THIRDPARTY_ID,header.AUTH_USERNAME,header.AUTH_PASSWORD, header.ENABLE_FLAG,
+            header.MAPPER_CLASS,
+            line.LINE_CODE ,line.IFT_URL , line.ENABLE_FLAG,line.MOCK_LINE_URL,line.IS_MOCK_LINE,line.OBJ_TO_ARR
+        FROM
+            hms_interface_header_b header,
+            hms_interface_line_b line
+        WHERE
+        header.HEADER_ID = line.HEADER_ID
+        and  line.LINE_ID = #{lineId}
+    </select>
+
+    <select id="getLinesByHeaderId" resultMap="lineResultMap"  parameterType="java.lang.Object">
+        SELECT
+             line.LINE_ID , line.HEADER_ID , line.LINE_CODE , line.IFT_URL , line.ENABLE_FLAG,line.OBJ_TO_ARR,
+             line.MOCK_LINE_URL,line.IS_MOCK_LINE,
+             lineTl.LANG , lineTl.LINE_NAME , lineTl.LINE_DESCRIPTION
+        FROM
+            hms_interface_line_b line ,
+            hms_interface_line_tl lineTl
+        WHERE
+            line.HEADER_ID = #{headerId}
+        AND
+            line.LINE_ID = lineTl.LINE_ID
+        <if test="lineCode != null">
+            AND line.LINE_CODE LIKE '%${lineCode}%'
+        </if>
+        <if test="lineName !=null">
+            AND lineTl.LINE_NAME LIKE '%${lineName}%'
+        </if>
+        and
+            lineTl.LANG = #{lang}
+        ORDER BY line.LINE_CODE
+    </select>
+
+</mapper>

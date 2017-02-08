@@ -1,0 +1,258 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="hmap.core.hms.api.mapper.HmsHeaderMapper">
+
+    <!--获取所有的header-->
+    <resultMap id="headerResultMap" type="hmap.core.hms.api.dto.HeaderAndHeaderTlDTO"
+               extends="com.hand.hap.mapper.StdMapper.STD">
+        <id column="HEADER_ID" property="headerId" jdbcType="VARCHAR"/>
+        <result column="INTERFACE_CODE" property="interfaceCode" jdbcType="VARCHAR"/>
+        <result column="INTERFACE_TYPE" property="interfaceType" jdbcType="VARCHAR"/>
+        <result column="BODY_HEADER" property="bodyHeader" jdbcType="VARCHAR"/>
+        <result column="BODY_TAIL" property="bodyTail" jdbcType="VARCHAR"/>
+        <result column="NAMESPACE" property="namespace" jdbcType="VARCHAR"/>
+        <result column="DOMAIN_URL" property="domainUrl" jdbcType="VARCHAR"/>
+        <result column="REQUEST_METHOD" property="requestMethod" jdbcType="VARCHAR"/>
+        <result column="REQUEST_FORMAT" property="requestFormat" jdbcType="VARCHAR"/>
+        <result column="REQUEST_CONTENTTYPE" property="requestContenttype" jdbcType="VARCHAR"/>
+        <result column="REQUEST_ACCEPT" property="requestAccept" jdbcType="VARCHAR"/>
+        <result column="AUTH_USERNAME" property="authUsername" jdbcType="VARCHAR"/>
+        <result column="AUTH_PASSWORD" property="authPassword" jdbcType="VARCHAR"/>
+        <result column="ENABLE_FLAG" property="enableFlag" jdbcType="VARCHAR"/>
+        <result column="MAPPER_CLASS" property="mapperClass" jdbcType="VARCHAR"/>
+        <result column="SYSTEM_TYPE" property="systemType" jdbcType="VARCHAR"/>
+        <result column="AUTH_TYPE" property="authType" jdbcType="VARCHAR"/>
+        <result column="GRANT_TYPE" property="grantType" jdbcType="VARCHAR"/>
+        <result column="ACCESS_TOKEN_URL" property="accessTokenUrl" jdbcType="VARCHAR"/>
+        <result column="THIRDPARTY_ID" property="thirdpartyId" jdbcType="VARCHAR"/>
+        <result column="MOCK_URL" property="mockUrl" jdbcType="VARCHAR"/>
+        <result column="IS_MOCK" property="isMock" jdbcType="VARCHAR"/>
+        <result property="lang" column="LANG" jdbcType="VARCHAR"/>
+        <result property="name" column="NAME" jdbcType="VARCHAR"/>
+        <result property="description" column="DESCRIPTION" jdbcType="VARCHAR"/>
+
+    </resultMap>
+
+    <!--获取header对象和关联的line集合-->
+    <resultMap id="headerLineResultMap" type="hmap.core.hms.api.dto.HeaderAndHeaderTlDTO"
+               extends="com.hand.hap.mapper.StdMapper.STD">
+        <!--HmsInterfaceHeader-->
+        <id column="HEADER_ID" property="headerId" jdbcType="VARCHAR"/>
+        <result column="INTERFACE_CODE" property="interfaceCode" jdbcType="VARCHAR"/>
+        <result column="INTERFACE_TYPE" property="interfaceType" jdbcType="VARCHAR"/>
+        <result column="BODY_HEADER" property="bodyHeader" jdbcType="VARCHAR"/>
+        <result column="BODY_TAIL" property="bodyTail" jdbcType="VARCHAR"/>
+        <result column="NAMESPACE" property="namespace" jdbcType="VARCHAR"/>
+        <result column="DOMAIN_URL" property="domainUrl" jdbcType="VARCHAR"/>
+        <result column="REQUEST_METHOD" property="requestMethod" jdbcType="VARCHAR"/>
+        <result column="REQUEST_FORMAT" property="requestFormat" jdbcType="VARCHAR"/>
+        <result column="REQUEST_CONTENTTYPE" property="requestContenttype" jdbcType="VARCHAR"/>
+        <result column="REQUEST_ACCEPT" property="requestAccept" jdbcType="VARCHAR"/>
+        <result column="AUTH_USERNAME" property="authUsername" jdbcType="VARCHAR"/>
+        <result column="AUTH_PASSWORD" property="authPassword" jdbcType="VARCHAR"/>
+        <result column="ENABLE_FLAG" property="enableFlag" jdbcType="VARCHAR"/>
+        <result column="MAPPER_CLASS" property="mapperClass" jdbcType="VARCHAR"/>
+        <result column="MOCK_URL" property="mockUrl" jdbcType="VARCHAR"/>
+        <result column="IS_MOCK" property="isMock" jdbcType="VARCHAR"/>
+        <!--HmsInterfaceHeaderTl-->
+        <result property="lang" column="LANG" jdbcType="VARCHAR"/>
+        <result property="name" column="NAME" jdbcType="VARCHAR"/>
+        <result property="description" column="DESCRIPTION" jdbcType="VARCHAR"/>
+        <collection property="lineList" ofType="hmap.core.hms.api.dto.LineAndLineTlDTO">
+            <!--HmsInterfaceLine-->
+            <id property="lineId" column="LINE_ID" jdbcType="VARCHAR"/>
+            <result property="headerId" column="HEADER_ID" jdbcType="VARCHAR"/>
+            <result property="lineCode" column="LINE_CODE" jdbcType="VARCHAR"/>
+            <result property="iftUrl" column="IFT_URL" jdbcType="VARCHAR"/>
+            <result property="enableFlag" column="ENABLE_FLAG" jdbcType="VARCHAR"/>
+            <!--HmsInterfaceLineTl-->
+            <result property="lang" column="LANG" jdbcType="VARCHAR"/>
+            <result property="lineName" column="LINE_NAME" jdbcType="VARCHAR"/>
+            <result property="lineDescription" column="LINE_DESCRIPTION" jdbcType="VARCHAR"/>
+        </collection>
+
+    </resultMap>
+
+    <resultMap id="headerLineResultMap2" type="hmap.core.hms.api.dto.HeaderAndLineDTO">
+        <result column="HEADER_ID" property="headerId" jdbcType="VARCHAR"/>
+        <result column="INTERFACE_CODE" property="interfaceCode" jdbcType="VARCHAR"/>
+        <result column="INTERFACE_TYPE" property="interfaceType" jdbcType="VARCHAR"/>
+        <result column="BODY_HEADER" property="bodyHeader" jdbcType="VARCHAR"/>
+        <result column="BODY_TAIL" property="bodyTail" jdbcType="VARCHAR"/>
+        <result column="NAMESPACE" property="namespace" jdbcType="VARCHAR"/>
+        <result column="DOMAIN_URL" property="domainUrl" jdbcType="VARCHAR"/>
+        <result column="REQUEST_METHOD" property="requestMethod" jdbcType="VARCHAR"/>
+        <result column="REQUEST_FORMAT" property="requestFormat" jdbcType="VARCHAR"/>
+        <result column="REQUEST_CONTENTTYPE" property="requestContenttype" jdbcType="VARCHAR"/>
+        <result column="REQUEST_ACCEPT" property="requestAccept" jdbcType="VARCHAR"/>
+        <result column="AUTH_USERNAME" property="authUsername" jdbcType="VARCHAR"/>
+        <result column="AUTH_PASSWORD" property="authPassword" jdbcType="VARCHAR"/>
+        <result column="ENABLE_FLAG" property="enableFlag" jdbcType="VARCHAR"/>
+        <result column="MAPPER_CLASS" property="mapperClass" jdbcType="VARCHAR"/>
+        <result column="SYSTEM_TYPE" property="systemType" jdbcType="VARCHAR"/>
+        <result column="AUTH_TYPE" property="authType" jdbcType="VARCHAR"/>
+        <result column="GRANT_TYPE" property="grantType" jdbcType="VARCHAR"/>
+        <result column="ACCESS_TOKEN_URL" property="accessTokenUrl" jdbcType="VARCHAR"/>
+        <result column="THIRDPARTY_ID" property="thirdpartyId" jdbcType="VARCHAR"/>
+        <result column="MOCK_URL" property="mockUrl" jdbcType="VARCHAR"/>
+        <result column="IS_MOCK" property="isMock" jdbcType="VARCHAR"/>
+        <!--HmsInterfaceLine-->
+
+        <result property="lineId" column="LINE_ID" jdbcType="VARCHAR"/>
+        <result property="lineCode" column="LINE_CODE" jdbcType="VARCHAR"/>
+        <result property="iftUrl" column="IFT_URL" jdbcType="VARCHAR"/>
+        <result property="enableFlag" column="ENABLE_FLAG" jdbcType="VARCHAR"/>
+        <result property="objToArr" column="OBJ_TO_ARR" jdbcType="VARCHAR"/>
+        <result column="MOCK_LINE_URL" property="mockLineUrl" jdbcType="VARCHAR"/>
+        <result column="IS_MOCK_LINE" property="isMockLine" jdbcType="VARCHAR"/>
+    </resultMap>
+
+
+    <select id="getAllHeader" resultMap="headerResultMap">
+        SELECT
+             header.HEADER_ID,header.INTERFACE_CODE,header.INTERFACE_TYPE,header.BODY_HEADER,
+             header.BODY_TAIL,header.NAMESPACE,header.DOMAIN_URL,header.REQUEST_METHOD,
+             header.REQUEST_FORMAT,header.REQUEST_CONTENTTYPE,header.REQUEST_ACCEPT,header.AUTH_USERNAME,header.AUTH_PASSWORD,
+             header.AUTH_TYPE,header.GRANT_TYPE,header.ACCESS_TOKEN_URL,header.THIRDPARTY_ID,header.MOCK_URL,header.IS_MOCK,
+             header.ENABLE_FLAG,header.MAPPER_CLASS,(select cb.meaning
+                                                    from sys_code_b c,sys_code_value_b cb
+                                                    where c.code='HMS.SYSTEM_TYPE'
+                                                    and c.code_id=cb.code_id
+                                                    and cb.value=header.SYSTEM_TYPE) SYSTEM_TYPE,
+             headerTl.LANG ,headerTl.NAME ,headerTl.DESCRIPTION
+        from hms_interface_header_b header,hms_interface_header_tl headerTl
+        WHERE header.HEADER_ID = headerTl.HEADER_ID
+        <if test="interfaceCode != null ">
+            AND header.INTERFACE_CODE LIKE '%${interfaceCode}%'
+        </if>
+        <if test="name != null">
+           AND headerTl.NAME LIKE '%${name}%'
+        </if>
+        and  headerTl.LANG =  #{lang}
+        order by header.INTERFACE_CODE
+    </select>
+
+
+    <select id="getHeaderAndLineList" resultMap="headerLineResultMap">
+        SELECT
+        header.HEADER_ID,header.INTERFACE_CODE,header.INTERFACE_TYPE,header.BODY_HEADER,
+        header.BODY_TAIL,header.NAMESPACE,header.DOMAIN_URL,header.REQUEST_METHOD,
+        header.REQUEST_FORMAT,header.REQUEST_CONTENTTYPE,header.REQUEST_ACCEPT,
+        header.AUTH_USERNAME,header.AUTH_PASSWORD, header.ENABLE_FLAG,header.MAPPER_CLASS,
+        header.AUTH_TYPE,header.GRANT_TYPE,header.ACCESS_TOKEN_URL,header.THIRDPARTY_ID,header.MOCK_URL,header.IS_MOCK,
+        headerTl.LANG ,headerTl.NAME ,headerTl.DESCRIPTION,
+        line.LINE_ID, line.HEADER_ID, line.LINE_CODE ,line.IFT_URL , line.ENABLE_FLAG,line.MOCK_LINE_URL,line.IS_MOCK_LINE,
+        lineTl.LANG , lineTl.LINE_NAME ,lineTl.LINE_DESCRIPTION
+
+        from
+        hms_interface_header_b header,
+        hms_interface_header_tl headerTl,
+        hms_interface_line_b line,
+        hms_interface_line_tl lineTl
+        WHERE header.HEADER_ID = headerTl.HEADER_ID
+        and  headerTl.LANG = #{lang}
+        and header.HEADER_ID = line.HEADER_ID
+        and line.HEADER_ID = #{headerId}
+        and lineTl.LINE_ID = line.LINE_ID
+        and lineTl.LANG = #{lang}
+    </select>
+
+    <select id="getHeaderByHeaderId" resultMap="headerResultMap">
+        SELECT
+        header.HEADER_ID,header.INTERFACE_CODE,header.INTERFACE_TYPE,header.BODY_HEADER,
+        header.BODY_TAIL,header.NAMESPACE,header.DOMAIN_URL,header.REQUEST_METHOD,
+        header.REQUEST_FORMAT,header.REQUEST_CONTENTTYPE,header.REQUEST_ACCEPT,
+        header.AUTH_USERNAME,header.AUTH_PASSWORD, header.ENABLE_FLAG,header.MAPPER_CLASS,header.SYSTEM_TYPE,
+        header.AUTH_TYPE,header.GRANT_TYPE,header.ACCESS_TOKEN_URL,header.THIRDPARTY_ID,header.MOCK_URL,header.IS_MOCK,
+        headerTl.LANG ,headerTl.NAME ,headerTl.DESCRIPTION
+        from
+        hms_interface_header_b header,
+        hms_interface_header_tl headerTl
+        WHERE header.HEADER_ID = headerTl.HEADER_ID
+        and header.HEADER_ID = #{headerId}
+        and  headerTl.LANG = #{lang}
+    </select>
+
+    <!--根据sysName 和 apiName 获取header和line-->
+    <select id="getHeaderAndLineBySysNameAndApiName" resultMap="headerLineResultMap2">
+        SELECT
+            header.INTERFACE_CODE,header.INTERFACE_TYPE,header.BODY_HEADER,
+            header.BODY_TAIL,header.NAMESPACE,header.DOMAIN_URL,header.REQUEST_METHOD,
+            header.REQUEST_FORMAT,header.REQUEST_CONTENTTYPE,header.REQUEST_ACCEPT,
+            header.NAMESPACE,header.MAPPER_CLASS,
+            header.AUTH_FLAG,header.AUTH_USERNAME,header.AUTH_PASSWORD, header.ENABLE_FLAG,
+            header.AUTH_USERNAME,header.AUTH_PASSWORD, header.ENABLE_FLAG,
+            header.AUTH_TYPE,header.GRANT_TYPE,header.ACCESS_TOKEN_URL,header.THIRDPARTY_ID,header.MOCK_URL,header.IS_MOCK,
+            line.LINE_CODE ,line.IFT_URL , line.ENABLE_FLAG,line.MOCK_LINE_URL,line.IS_MOCK_LINE,line.OBJ_TO_ARR
+        FROM
+            hms_interface_header_b header,
+            hms_interface_line_b line
+        WHERE
+        header.HEADER_ID = line.HEADER_ID
+        and header.INTERFACE_CODE = #{sysName}
+        and header.ENABLE_FLAG = 'Y'
+        and line.LINE_CODE = #{apiName}
+        and line.ENABLE_FLAG = 'Y'
+
+    </select>
+
+    <!--获取header和line 放于catch中-->
+    <select id="getAllHeaderAndLine" resultMap="headerLineResultMap2">
+        SELECT
+        header.HEADER_ID,
+        header.INTERFACE_CODE,header.INTERFACE_TYPE,header.BODY_HEADER,
+        header.BODY_TAIL,header.NAMESPACE,header.DOMAIN_URL,header.REQUEST_METHOD,
+        header.REQUEST_FORMAT,header.REQUEST_CONTENTTYPE,header.REQUEST_ACCEPT,
+        header.AUTH_USERNAME,header.AUTH_PASSWORD, header.ENABLE_FLAG,
+        header.AUTH_TYPE,header.GRANT_TYPE,header.ACCESS_TOKEN_URL,header.THIRDPARTY_ID,header.MOCK_URL,header.IS_MOCK,
+        header.MAPPER_CLASS,
+        line.LINE_ID,line.LINE_CODE ,line.IFT_URL , line.ENABLE_FLAG,line.MOCK_LINE_URL,line.IS_MOCK_LINE,line.OBJ_TO_ARR
+        FROM
+        hms_interface_header_b header,
+        hms_interface_line_b line
+        WHERE
+        header.HEADER_ID = line.HEADER_ID
+        and header.ENABLE_FLAG = 'Y'
+        and line.ENABLE_FLAG = 'Y'
+
+    </select>
+
+    <select id="getHeaderAndLineBylineId" resultMap="headerLineResultMap2">
+        SELECT
+        header.INTERFACE_CODE,header.INTERFACE_TYPE,header.BODY_HEADER,
+        header.BODY_TAIL,header.NAMESPACE,header.DOMAIN_URL,header.REQUEST_METHOD,
+        header.REQUEST_FORMAT,header.REQUEST_CONTENTTYPE,header.REQUEST_ACCEPT,
+        header.AUTH_USERNAME,header.AUTH_PASSWORD, header.ENABLE_FLAG,
+        header.AUTH_TYPE,header.GRANT_TYPE,header.ACCESS_TOKEN_URL,header.THIRDPARTY_ID,header.MOCK_URL,header.IS_MOCK,
+        header.MAPPER_CLASS,
+        line.LINE_ID, line.LINE_CODE ,line.IFT_URL,line.ENABLE_FLAG,line.MOCK_LINE_URL,line.IS_MOCK_LINE,line.OBJ_TO_ARR
+        FROM
+        hms_interface_header_b header,
+        hms_interface_line_b line
+        WHERE
+        header.HEADER_ID = line.HEADER_ID
+        and line.LINE_ID = #{lineId}
+        and header.ENABLE_FLAG = 'Y'
+        and line.ENABLE_FLAG = 'Y'
+
+    </select>
+
+    <select id="getAllPasswordOauthHeader" resultMap="headerResultMap">
+    SELECT
+             header.HEADER_ID,header.INTERFACE_CODE,header.INTERFACE_TYPE,header.BODY_HEADER,
+             header.BODY_TAIL,header.NAMESPACE,header.DOMAIN_URL,header.REQUEST_METHOD,
+             header.REQUEST_FORMAT,header.REQUEST_CONTENTTYPE,header.REQUEST_ACCEPT,header.AUTH_USERNAME,header.AUTH_PASSWORD,
+             header.AUTH_TYPE,header.GRANT_TYPE,header.ACCESS_TOKEN_URL,header.THIRDPARTY_ID,header.MOCK_URL,header.IS_MOCK,
+             header.ENABLE_FLAG,header.MAPPER_CLASS,header.SYSTEM_TYPE,
+             headerTl.LANG ,headerTl.NAME ,headerTl.DESCRIPTION
+    from hms_interface_header_b header,hms_interface_header_tl headerTl
+    WHERE header.HEADER_ID = headerTl.HEADER_ID
+    AND  header.AUTH_TYPE='OAUTH2' and header.GRANT_TYPE='PASSWORD'
+    and  lang='zh_CN'
+    </select>
+
+
+
+</mapper>

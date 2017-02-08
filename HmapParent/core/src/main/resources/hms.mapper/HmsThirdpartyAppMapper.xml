@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="hmap.core.hms.system.mapper.HmsThirdpartyAppMapper">
+    <resultMap id="thirdpartyAppMap" type="hmap.core.hms.system.domain.HmsThirdpartyApp" extends="com.hand.hap.mapper.StdMapper.STD">
+        <id column="ID" property="id" jdbcType="VARCHAR"/>
+        <result column="APP_NAME" property="appName" jdbcType="VARCHAR"/>
+        <result column="APP_CODE" property="appCode" jdbcType="VARCHAR"/>
+        <result column="APP_DESC" property="appDesc" jdbcType="VARCHAR"/>
+        <result column="APP_ICON" property="appIcon" jdbcType="VARCHAR"/>
+        <result column="APP_KEY" property="appKey" jdbcType="VARCHAR"/>
+        <result column="APP_SECRET" property="appSecret" jdbcType="VARCHAR"/>
+        <result column="FREE_FLAG" property="freeFlag" jdbcType="VARCHAR"/>
+        <result column="EXPIRED_DATE" property="expiredDate" javaType="java.sql.Date" jdbcType="DATE"/>
+        <result column="ENABLE_FLAG" property="enableFlag" jdbcType="VARCHAR"/>
+        <result column="APP_HOMEPAGE" property="appHomepage" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <select id="selectById" resultMap="thirdpartyAppMap">
+      select * from HMS_THIRDPARTY_APP where id = #{id}
+    </select>
+    <select id="selectByAppKey" resultMap="thirdpartyAppMap">
+        select * from HMS_THIRDPARTY_APP where app_key = #{app_key}
+    </select>
+    <select id="selectByCode" resultMap="thirdpartyAppMap">
+      select * from HMS_THIRDPARTY_APP where APP_CODE = #{code}
+    </select>
+    <select id="selectByKey" resultMap="thirdpartyAppMap">
+        select * from HMS_THIRDPARTY_APP where APP_KEY = #{key}
+    </select>
+</mapper>

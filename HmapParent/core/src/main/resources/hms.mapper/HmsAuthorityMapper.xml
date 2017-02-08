@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="hmap.core.hms.system.mapper.HmsAuthorityMapper">
+    <resultMap id="hmsAuthorityMap" type="com.hand.hap.account.dto.User" extends="com.hand.hap.mapper.StdMapper.STD">
+        <id column="USER_ID" property="userId" jdbcType="DECIMAL" />
+        <result column="USER_NAME" property="userName" jdbcType="VARCHAR" />
+        <result column="PASSWORD_ENCRYPTED" property="passwordEncrypted" jdbcType="VARCHAR" />
+        <result column="EMAIL" property="email" jdbcType="VARCHAR" />
+        <result column="PHONE" property="phone" jdbcType="VARCHAR" />
+        <result column="START_ACTIVE_DATE" property="startActiveDate" javaType="DATE"/>
+        <result column="END_ACTIVE_DATE" property="endActiveDate" javaType="DATE"/>
+        <result column="STATUS" property="status" jdbcType="VARCHAR" />
+    </resultMap>
+
+    <select id="selectUserByUrlAndUserName" resultMap="hmsAuthorityMap">
+        SELECT
+            u.*
+        FROM
+            sys_function_b f,
+            sys_role_function role,
+            sys_user_role user_role,
+            sys_user u,
+            sys_function_resource fr,
+            sys_resource_b r
+        WHERE 1=1
+        and role.function_id = f.function_id
+        AND user_role.role_id = role.role_id
+        AND u.user_id = user_role.user_id
+        and f.function_id = fr.function_id
+        and r.url = #{url,jdbcType=VARCHAR}
+        and r.resource_id=fr.resource_id
+        AND u.user_name = #{userName,jdbcType=VARCHAR}
+    </select>
+
+</mapper>

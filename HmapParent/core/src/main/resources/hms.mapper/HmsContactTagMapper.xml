@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="hmap.core.hms.contact.mapper.HmsContactTagMapper">
+    <resultMap id="BaseResultMap" type="hmap.core.hms.contact.domain.HmsContactTag"
+               extends="com.hand.hap.mapper.StdMapper.STD">
+        <id column="ID" property="id" jdbcType="VARCHAR"/>
+        <result column="TAG_NAME" property="tagName" jdbcType="VARCHAR"/>
+        <result column="TAG_STATUS" property="tagStatus" jdbcType="VARCHAR"/>
+        <result column="TAG_OWNER" property="tagOwner" jdbcType="VARCHAR"/>
+        <result column="TAG_PINYIN" property="tagPinyin" jdbcType="VARCHAR"/>
+        <result column="TAG_PINYIN_CAPITAL" property="tagPinyinCapital" jdbcType="VARCHAR"/>
+    </resultMap>
+    <select id="selectAllTags" resultMap="BaseResultMap">
+        select * from HMS_CONTACT_TAG where TAG_STATUS!='lock' and TAG_STATUS!='delete' and TAG_OWNER!=#{0}
+        union
+        select * from HMS_CONTACT_TAG where TAG_OWNER=#{0} and TAG_STATUS!='delete'
+        order by creation_date
+    </select>
+</mapper>

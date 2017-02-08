@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="hmap.core.hms.uploader.mapper.HmsUploadObjectMapper">
+    <resultMap id="BaseResultMap" type="hmap.core.hms.uploader.domain.HmsUploadObject"
+               extends="com.hand.hap.mapper.StdMapper.STD">
+        <id column="ID" property="id" jdbcType="VARCHAR"/>
+        <result column="EMP_NO" property="empNo" jdbcType="VARCHAR"/>
+        <result column="OBJECT_NAME" property="objectName" jdbcType="VARCHAR"/>
+        <result column="OBJECT_TYPE" property="objectType" jdbcType="VARCHAR"/>
+        <result column="OBJECT_URL" property="objectUrl" jdbcType="VARCHAR"/>
+        <result column="FUNCTION_NAME" property="functionName" jdbcType="VARCHAR"/>
+        <result column="DATA_ID" property="dataId" jdbcType="VARCHAR"/>
+        <result column="ENABLE" property="enable" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <select id="selectByFunctionNameAndDataId" resultMap="BaseResultMap">
+		SELECT * FROM hms_upload_object
+		WHERE FUNCTION_NAME=#{functionName,jdbcType=VARCHAR}
+		and DATA_ID=#{dataId,jdbcType=VARCHAR}
+		and ENABLE='Y'
+		UNION
+		SELECT * FROM hrms_upload_object
+		WHERE FUNCTION_NAME=#{functionName,jdbcType=VARCHAR}
+		and DATA_ID=#{dataId,jdbcType=VARCHAR}
+		and ENABLE='Y'
+	</select>
+    <select id="selectRecentByFunctionNameAndDataId" resultMap="BaseResultMap">
+		SELECT * FROM hms_upload_object
+		WHERE FUNCTION_NAME=#{functionName,jdbcType=VARCHAR}
+		and DATA_ID=#{dataId,jdbcType=VARCHAR}
+		and ENABLE='Y'
+		and CREATION_DATE=(select MIN(CREATION_DATE) from hms_upload_object h
+		WHERE h.FUNCTION_NAME=#{functionName,jdbcType=VARCHAR}
+		and h.DATA_ID=#{dataId,jdbcType=VARCHAR}
+		and h.ENABLE='Y')
+		UNION
+		SELECT * FROM hrms_upload_object
+		WHERE FUNCTION_NAME=#{functionName,jdbcType=VARCHAR}
+		and DATA_ID=#{dataId,jdbcType=VARCHAR}
+		and ENABLE='Y'
+		and CREATION_DATE=(select MIN(CREATION_DATE) from hrms_upload_object h
+		WHERE h.FUNCTION_NAME=#{functionName,jdbcType=VARCHAR}
+		and h.DATA_ID=#{dataId,jdbcType=VARCHAR}
+		and h.ENABLE='Y')
+	</select>
+	<select id="selectByObjectUrl" resultMap="BaseResultMap">
+		SELECT * FROM hms_upload_object
+		WHERE OBJECT_URL=#{objectUrl,jdbcType=VARCHAR}
+		and ENABLE='Y'
+		UNION
+		SELECT * FROM hrms_upload_object
+		WHERE OBJECT_URL=#{objectUrl,jdbcType=VARCHAR}
+		and ENABLE='Y'
+	</select>
+</mapper>

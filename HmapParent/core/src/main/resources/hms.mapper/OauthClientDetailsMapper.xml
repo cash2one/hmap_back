@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="hmap.core.hms.mapper.OauthClientDetailsMapper">
+    <!--<resultMap id="hmsAppAuthMap" type="hmap.core.hms.appcenter.domain.HmsAppAuth" extends="com.hand.hap.mapper.StdMapper.STD">-->
+        <!--<id column="ID" property="id" jdbcType="VARCHAR"/>-->
+        <!--<result column="USER_NAME" property="appName" jdbcType="VARCHAR"/>-->
+        <!--<result column="APP_NAME" property="appCode" jdbcType="VARCHAR"/>-->
+        <!--<result column="APP_TYPE" property="appDesc" jdbcType="VARCHAR"/>-->
+        <!--<result column="APP_ID" property="appIcon" jdbcType="VARCHAR"/>-->
+        <!--<result column="APP_SECRET" property="appKey" jdbcType="VARCHAR"/>-->
+        <!--<result column="APP_ICON" property="appSecret" jdbcType="VARCHAR"/>-->
+    <!--</resultMap>-->
+
+    <!--<select id="selectById" resultMap="hmsAppAuthMap">-->
+        <!--select * from HMS_APP_AUTH where id = #{id}-->
+    <!--</select>-->
+    <!--<insert id="insertAppAuth" keyProperty="Id" keyColumn="ID" useGeneratedKeys="true"-->
+            <!--parameterType="hmap.core.hms.appcenter.domain.HmsAppAuth">-->
+        <!--INSERT INTO hms_app_auth(-->
+        <!--ID,USER_NAME ,APP_NAME ,APP_TYPE,APP_ID,APP_SECRET,APP_ICON-->
+        <!--)-->
+        <!--VALUES (-->
+        <!--#{Id},#{userName} ,#{appName} ,#{appType},#{appId},#{appSecret},#{appIcon}-->
+        <!--)-->
+
+    <!--</insert>-->
+</mapper>
